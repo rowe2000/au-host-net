@@ -27,12 +27,8 @@ namespace MacTest
         private AUMidiOutputEventBlock midiOutputEventBlock = null;
         private AUHostTransportStateBlock transportStateBlock = null;
         //private AUHostMusicalContextBlock musicalContextBlock;
-        private List<MidiPacketsEventArgs> midiPacketsEventArgs = new List<MidiPacketsEventArgs>();
-        private List<MidiEndpoint> endPoints = new List<MidiEndpoint>();
         private MidiPort outputPort, inputPort;
-        private ConcurrentQueue<MidiMessage> packets = new ConcurrentQueue<MidiMessage>();
-        private MidiMessage[] readPacketList;
-
+        private readonly ConcurrentQueue<MidiMessage> packets = new ConcurrentQueue<MidiMessage>();
         public override AudioComponentDescription ComponentDescription { get; } = componentDescription;
 
         public override AUParameterTree ParameterTree { get; set; }
@@ -53,9 +49,9 @@ namespace MacTest
 
         void SetupMidi ()
         {
-            var client = new MidiClient("CoreMidiSample MIDI CLient");
+            var client = new MidiClient("AU Midi connector");
             client.ObjectAdded += delegate(object sender, ObjectAddedOrRemovedEventArgs e) {
-
+                //ReloadDevices ();
             };
             client.ObjectAdded += delegate {
                 //ReloadDevices ();
@@ -76,12 +72,15 @@ namespace MacTest
             outputPort = client.CreateOutputPort ("CoreMidiSample Output Port");
             inputPort = client.CreateInputPort ("CoreMidiSample Input Port");
             inputPort.MessageReceived += delegate(object sender, MidiPacketsEventArgs e) {
-                var readPacketList = ReadPacketList(e.PacketListRaw);
-                Console.WriteLine(readPacketList.Length);
-                foreach (var packet in readPacketList)
+                var packetList = e.PacketListRaw;
+                var length1 = Marshal.ReadInt32(packetList);
+                packetList += 4;
+                
+                for (var index = 0; index < length1; ++index)
                 {
-                    packets.Enqueue(packet);
-                    PrintPacket(packet, "IN");
+                    var midiMessage = new MidiMessage(packetList);
+                    packets.Enqueue(midiMessage);
+                    packetList += 10 + midiMessage.Bytes.Length;
                 }
             };
 
@@ -92,38 +91,6 @@ namespace MacTest
                 session.Enabled = true;
                 session.ConnectionPolicy = MidiNetworkConnectionPolicy.Anyone;
             }
-        }
-
-        private static void PrintPacket(MidiMessage packet, string s)
-        {
-                Console.Write($@": {s}, ");
-                var on_off = packet.Status == 144 ? "ON" : "OFF";
-                Console.Write($@"{on_off}, ");
-                Console.Write($@"{packet.Byte1}, ");
-                Console.WriteLine();
-            
-        }
-
-        private MidiMessage[] ReadPacketList(IntPtr packetList)
-        {
-            var length1 = Marshal.ReadInt32(packetList);
-            var midiPacketArray = new MidiMessage[length1];
-            packetList += 4;
-            for (var index = 0; index < length1; ++index)
-            {
-                midiPacketArray[index] = ReadPacket(packetList, out var length2);
-                packetList += length2;
-            }
-            return midiPacketArray;
-
-        }
-
-        private static MidiMessage ReadPacket(IntPtr ptr, out int length)
-        {
-            var timestamp = Marshal.ReadInt64(ptr);
-            var num = (ushort) Marshal.ReadInt16(ptr, 8);
-            length = 10 + num;
-            return new MidiMessage(timestamp, num, ptr + 10);
         }
 
         void ConnectExistingDevices ()
@@ -168,81 +135,37 @@ namespace MacTest
                 length = 0;
                 while(!packets.IsEmpty)
                 {
-                    Console.WriteLine(packets.Count);
                     packets.TryDequeue(out var packet);
-
-                    PrintPacket(packet, "DQ");
-
                     Array.Copy(packet.Bytes, 0, bytes, length, packet.Bytes.Length);
 
                     length += packet.Bytes.Length;
-                    //
-                    // for (var i = 0; i < packet.Bytes.Length; i++)
-                    // {
-                    //     bytes[length] = Marshal.ReadByte(packet.Bytes + i);
-                    //     length++;
-                    //     // string on_off = bytes[i] == 144 ? "ON" : "OFF";
-                    //     // Console.Write($@"{on_off}, ");
-                    //     // Console.Write($@"{bytes[i + 1]}, ");
-                    // }
                 }
 
-                readPacketList = null;
-
-
-                if (length> 0)
-                {
-                    Console.Write($@": PROC, ");
-                    //Console.Write($@": {length}, ");
-                    for (int i = 0; i < length; i+=3)
-                    {
-                        string on_off = bytes[i] == 144 ? "ON" : "OFF";
-                        Console.Write($@"{on_off}, ");
-                        Console.Write($@"{bytes[i + 1]}, ");
-                    }
-                    Console.WriteLine();
-                }
-
-                fixed (byte* bytes = &this.bytes[0])
-                    midiOutputEventBlock(0, 0, length, (IntPtr) (void*) bytes);
+                fixed (byte* ptr = &bytes[0])
+                    midiOutputEventBlock(0, 0, length, (IntPtr)ptr);
 
                 return AudioUnitStatus.NoError;
 
-                //
-                // var p = new List<MidiPacket>();
-                //
-                // while (!packets.IsEmpty)
-                //     if (packets.TryDequeue(out var packet))
-                //         p.Add(packet);
-                //
-                // var l = p.Sum(o => o.Length);
-                // var data = new byte[l];
-                //
-                // foreach (var midiPacket in p)
-                // {
-                //     midiPacket.Bytes
-                // }
-                //
-                //
-                // var midiDataLength = readPacketList.Sum(o => o.Length);
-                // midiData = new byte[midiDataLength];
             }
         }
     }
 
     internal class MidiMessage
     {
+        public long Timestamp { get; }
         public byte[] Bytes { get; }
         public byte Status => Bytes[0];
         public byte Byte1 => Bytes[1];
         public byte Byte2 => Bytes[2];
 
-        public MidiMessage(long timestamp, ushort num, IntPtr ptr)
+        public MidiMessage( IntPtr ptr)
         {
+            Timestamp = Marshal.ReadInt64(ptr);
+            var num = (ushort) Marshal.ReadInt16(ptr + 8);
             Bytes = new byte[num];
             for (var i = 0; i < num; i++)
             {
-                Bytes[i] = Marshal.ReadByte(ptr + i);
+                Bytes[i] = Marshal.ReadByte(ptr + i + 10);
             }
         }
     }

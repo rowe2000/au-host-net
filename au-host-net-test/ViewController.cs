@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AppKit;
@@ -19,8 +17,9 @@ namespace MacTest
           
         }
         
-        private AVAudioEngine engine = new AVAudioEngine();
-        private AVAudioUnit midiInDevAV;
+        private readonly AVAudioEngine engine = new AVAudioEngine();
+        private AVAudioUnit midiInDev;
+        private readonly List<AVAudioUnitComponent> plugins = new List<AVAudioUnitComponent>(); 
 
         public override void ViewDidLoad()
         {
@@ -45,7 +44,7 @@ namespace MacTest
                 ComponentFlagsMask = 0
             };
             var components = AVAudioUnitComponentManager.SharedInstance.GetComponents(anyDescription)
-                .OrderBy(o => o.ManufacturerName)
+                .GroupBy(o => o.ManufacturerName)
                 //.Where(o => o.Name == "M1")
                 ;
 
@@ -54,47 +53,94 @@ namespace MacTest
                 AudioComponentInstantiationOptions.OutOfProcess, 
                 (unit, error) =>
                 {
-                    midiInDevAV = unit ?? throw new ArgumentNullException(nameof(unit));
+                    midiInDev = unit ?? throw new ArgumentNullException(nameof(unit));
                 });
 
-            foreach (var o in components)
+            foreach (var group in components)
             {
-                Console.WriteLine($@"{o.Name }");
-                 
-                try
+                Console.WriteLine();
+                Console.WriteLine(group.Key);
+                Console.Write("     ");
+                switch (group.Key)
                 {
-                    if (o.Name != "M1")
-                        continue;
-    
-                    AVAudioUnit.FromComponentDescription (o.AudioComponentDescription, AudioComponentInstantiationOptions.LoadedRemotely, (av, AVError) =>
+                    //case "Roland Cloud":
+                    //case "KORG":
+                    case "Arturia":
+                    //case "GG Audio":
+                    //case "Plogue Art et Technologie":
+                    //case "Modartt":
+                    //case "SonicProjects":
+                    //case "Applied Acoustics Systems":
+                    //case "Digital Suburban":
+                        foreach (var o in group)
+                        {
+                            switch (o.Name)
+                            {
+                                case "DX7 V":
+                                    plugins.Add(o);
+                                    break;
+                                default:
+                                    Console.Write($@"{o.Name}, ");
+                                    break;
+                            }
+                        }
+
+                        break;
+
+                    default:
+                        foreach (var o in group)
+                            Console.Write($@"{o.Name}, "); 
+                        break;
+                }
+            }
+
+
+            foreach (var component in plugins)
+            {
+                CreatePlugin(component);
+            }
+        }
+
+        private void CreatePlugin(AVAudioUnitComponent o)
+        {
+            try
+            {
+                AVAudioUnit.FromComponentDescription(o.AudioComponentDescription,
+                    AudioComponentInstantiationOptions.LoadedRemotely, (av, AVError) =>
                     {
                         if (AVError != null || !(av is AVAudioUnitMidiInstrument aui))
                         {
                             Console.WriteLine($" CREATE FAILED -----> {o.ManufacturerName}, {o.Name}, {AVError}");
                             return;
                         }
-                        
+
                         engine.AttachNode(av);
-                        engine.Connect(av, engine.MainMixerNode, engine.MainMixerNode.GetBusOutputFormat(0));
-                        
-                        engine.AttachNode(midiInDevAV);
-                        AUMidiOutputEventBlock tap = Tap;
-                        engine.ConnectMidi(midiInDevAV, av, null, tap);
+                        engine.Connect(av, engine.MainMixerNode, 0, 0, engine.MainMixerNode.GetBusOutputFormat(0));
+
+                        engine.AttachNode(midiInDev);
+                        engine.ConnectMidi(midiInDev, av, null, null);
 
                         engine.Prepare();
                         engine.StartAndReturnError(out var err);
                         Console.WriteLine(err);
 
-                        av.AUAudioUnit.RequestViewController(view => View.AddSubview(view.View));
+                        av.AUAudioUnit.RequestViewController(view =>
+                        {
+                            View.Frame = view.View.Frame;
+                            View.AddSubview(view.View);
+                        });
+                        
+                        av.AudioUnit.Start();
+                        aui.Volume = 0.5f;
 
                         Console.WriteLine($" OK -----> {o.ManufacturerName}, {o.Name}");
                     });
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($" CRASHED -----> {o.ManufacturerName}, {o.Name}, {ex}, {ex.InnerException},");
-                }
             }
+            catch (Exception ex)
+            {
+                Console.WriteLine($" CRASHED -----> {o.ManufacturerName}, {o.Name}, {ex}, {ex.InnerException},");
+            }
+
         }
 
         private int Tap(long eventsampletime, byte cable, nint length, IntPtr midibytes)
