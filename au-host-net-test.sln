@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.810.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuHostLib", "AuHostLib\AuHostLib.csproj", "{3054DE61-FD1D-4492-901F-5445DFB30B96}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuHost.macOS", "AuHost.macOS\AuHost.macOS.csproj", "{656E0501-6BA7-49E9-8308-388A5A4FAFBA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3054DE61-FD1D-4492-901F-5445DFB30B96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3054DE61-FD1D-4492-901F-5445DFB30B96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3054DE61-FD1D-4492-901F-5445DFB30B96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3054DE61-FD1D-4492-901F-5445DFB30B96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{656E0501-6BA7-49E9-8308-388A5A4FAFBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{656E0501-6BA7-49E9-8308-388A5A4FAFBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{656E0501-6BA7-49E9-8308-388A5A4FAFBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{656E0501-6BA7-49E9-8308-388A5A4FAFBA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E4B05125-A2E0-4EC2-AFAA-05552CA1F72C}
+	EndGlobalSection
+EndGlobal
