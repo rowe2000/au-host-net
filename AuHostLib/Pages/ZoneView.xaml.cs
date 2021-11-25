@@ -14,7 +14,7 @@ namespace AuHost.Pages
             defaultBindingMode:BindingMode.OneWay
         );
         
-        private readonly StackLayoutHelper<Zone, StripView> helper = new StackLayoutHelper<Zone, StripView>();
+        private readonly StackLayoutHelper<Zone, StripView, Strip> helper = new StackLayoutHelper<Zone, StripView, Strip>();
 
         public Zone Item
         {

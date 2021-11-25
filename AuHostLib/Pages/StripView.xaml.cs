@@ -17,7 +17,7 @@ namespace AuHost.Pages
             defaultBindingMode:BindingMode.OneWay
         );
         
-        private readonly StackLayoutHelper<Strip, PluginView> helper = new StackLayoutHelper<Strip, PluginView>();
+        private readonly StackLayoutHelper<Strip, PluginView, Plugin> helper = new StackLayoutHelper<Strip, PluginView, Plugin>();
 
         public Strip Item
         {

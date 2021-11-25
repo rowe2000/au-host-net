@@ -7,13 +7,9 @@ using Xamarin.Forms;
 
 namespace AuHost.Pages
 {
-    public class StackLayoutHelper<TItem, TItemView> where TItem : INotifyCollectionChanged
+    public class StackLayoutHelper<TItem, TItemView, TSubItem> where TItem : INotifyCollectionChanged 
+        where TItemView : View, IItemView<TSubItem>, new()
     {
-        private static readonly ConstructorInfo ViewConstructorInfo = typeof(TItemView)
-            .GetConstructors()
-            .First(o => o.GetParameters()
-                .SingleOrDefault()?.ParameterType == typeof(TItem));
-
         public StackLayout StackLayout { get; } = new StackLayout();
 
         private TItem item;
@@ -29,11 +25,6 @@ namespace AuHost.Pages
                     item.CollectionChanged += ItemsCollectionChanged;
             }
         }
-        
-        private View CreateView(IItem newItem)
-        {
-            return (View)ViewConstructorInfo?.Invoke(this, new object[] { newItem });
-        }
 
         private void ItemsCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -42,7 +33,7 @@ namespace AuHost.Pages
                 case NotifyCollectionChangedAction.Add:
                     foreach (IItem newItem in e.NewItems)
                     {
-                        StackLayout.Children.Insert(newItem.Index, CreateView(newItem));
+                        StackLayout.Children.Insert(newItem.Index, new TItemView { Item = (TSubItem)newItem });
                     }
 
                     break;
