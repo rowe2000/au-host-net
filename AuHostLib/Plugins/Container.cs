@@ -21,7 +21,7 @@ namespace AuHost.Plugins
             Items.CollectionChanged += (_, e) =>
             {
                 OnCollectionChanged(e);
-                OnChanged(new ChangedEvent<TItem>(e.Action, e.NewItems.OfType<TItem>().ToArray(), null));
+                OnChanged(new ChangedEvent<TItem>(e.Action, e.NewItems.OfType<TItem>().ToArray()));
             };
         }
 
@@ -85,7 +85,7 @@ namespace AuHost.Plugins
             }
 
             Items.Clear();
-            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Reset, null, null));
+            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Reset));
         }
 
         public bool Contains(TItem item) => Items.Contains(item);
@@ -102,7 +102,7 @@ namespace AuHost.Plugins
             
             var removed = Items.Remove(item);
             if (removed)
-                OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, item.ToMany(), null));
+                OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, item));
             
             return removed;
         }
@@ -137,7 +137,7 @@ namespace AuHost.Plugins
             item.Index = -1;
             
             Items.RemoveAt(index);
-            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, item.ToMany(), index));
+            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, item, index));
         }
 
         public void RemoveRange(IEnumerable<TItem> items)
@@ -152,7 +152,7 @@ namespace AuHost.Plugins
             
             Items.RemoveRange(array);
 
-            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, array, null));
+            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, array));
         }
 
         public void RemoveRange(int index, int count)
@@ -182,7 +182,7 @@ namespace AuHost.Plugins
                 value.Parent = this;
                 Items[index] = value;
 
-                OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Replace, value));
+                OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Replace, value, index));
             }
         }
 
@@ -194,7 +194,7 @@ namespace AuHost.Plugins
             Items.Insert(newIndex, item);
             item.Index = newIndex;
 
-            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Move, item.ToMany(), index));
+            OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Move, item, index));
         }
 
         public virtual void OnChanged(ChangedEvent<TItem> obj) => Changed?.Invoke(obj);

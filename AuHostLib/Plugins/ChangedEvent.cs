@@ -9,7 +9,12 @@ namespace AuHost.Plugins
         public IEnumerable<T> Items { get; }
         public int? Index { get; }
 
-        public ChangedEvent(NotifyCollectionChangedAction changeType, IEnumerable<T> items, int? index)
+        public ChangedEvent(NotifyCollectionChangedAction changeType, T items = default, int? index = null) : this(changeType, items.ToMany(), index)
+        {
+            
+        }
+
+        public ChangedEvent(NotifyCollectionChangedAction changeType, IEnumerable<T> items, int? index = null)
         {
             Items = items;
             Index = index;
