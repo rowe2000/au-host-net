@@ -10,7 +10,7 @@ namespace AuHost.Pages
     public class StackLayoutHelper<TItem, TItemView, TSubItem> where TItem : INotifyCollectionChanged 
         where TItemView : View, IItemView<TSubItem>, new()
     {
-        public StackLayout StackLayout { get; }
+        public StackLayout StackLayout { get; } = new StackLayout();
 
         private TItem item;
 
