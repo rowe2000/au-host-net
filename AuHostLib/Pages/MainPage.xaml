@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:AuHost.ViewModels;assembly=AuHostLib"
+             xmlns:pages="clr-namespace:AuHost.Pages;assembly=AuHostLib"
              x:Class="AuHost.Pages.MainPage">
     <ContentPage.BindingContext>
         <viewModels:MainViewModel/>
@@ -34,9 +35,9 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <StackLayout BindingContext="{Binding Frame.Items}">
+        <pages:FrameView BindingContext="{Binding Frame.Items}">
             <StackLayout></StackLayout>
-        </StackLayout>
+        </pages:FrameView>
         
         <!-- -->
         <!-- ~1~ Frame @1@ -->

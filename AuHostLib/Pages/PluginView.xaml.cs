@@ -8,27 +8,20 @@ using Xamarin.Forms.Xaml;
 namespace AuHost.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class RackView : ContentView, IItemView<Rack>
+    public partial class PluginView : ContentView, IItemView<Plugins.Plugin>
     {
         public static BindableProperty BindableProperty { get; } = BindableProperty.Create(
             nameof(Item),
-            typeof(Rack),
-            typeof(RackView),
+            typeof(Container<Zone>), 
+            typeof(PluginView),
             defaultBindingMode:BindingMode.OneWay
         );
+        
+        public Plugin Item { get; set; }
 
-        private readonly StackLayoutHelper<Rack, ZoneView> helper = new StackLayoutHelper<Rack, ZoneView>();
-
-        public Rack Item
-        {
-            get => helper.Item;
-            set => helper.Item = value;
-        }
-
-        public RackView()
+        public PluginView()
         {
             InitializeComponent();
-            Content = helper.StackLayout;
-        }
+        }        
     }
 }

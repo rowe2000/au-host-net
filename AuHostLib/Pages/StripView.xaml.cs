@@ -4,32 +4,31 @@ using System.Linq;
 using AuHost.Plugins;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
-using Frame = AuHost.Plugins.Frame;
 
 namespace AuHost.Pages
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
-    public partial class FrameView : ContentView, IItemView<Plugins.Frame>
+    public partial class StripView : ContentView, IItemView<Plugins.Strip>
     {
         public static BindableProperty BindableProperty { get; } = BindableProperty.Create(
             nameof(Item),
-            typeof(Frame), 
-            typeof(FrameView),
+            typeof(Strip), 
+            typeof(StripView),
             defaultBindingMode:BindingMode.OneWay
         );
+        
+        private readonly StackLayoutHelper<Strip, PluginView> helper = new StackLayoutHelper<Strip, PluginView>();
 
-        private readonly StackLayoutHelper<Frame, RackView> helper = new StackLayoutHelper<Frame, RackView>();
-
-        public Frame Item
+        public Strip Item
         {
             get => helper.Item;
             set => helper.Item = value;
         }
 
-        public FrameView()
+        public StripView()
         {
             InitializeComponent();
             Content = helper.StackLayout;
-        }
+        }    
     }
 }
