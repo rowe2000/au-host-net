@@ -2,8 +2,8 @@ using AuHost.Plugins;
 
 namespace AuHost.Pages
 {
-    public interface IItemView<out TItem>
+    public interface IItemView<TItem>
     {
-        TItem Item { get; }
+        TItem Item { get; set; }
     }
 }

@@ -2,7 +2,9 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AuHost.Pages.ZoneView">
-    <StackLayout>
-        <Label Text="ZONE" /> 
-    </StackLayout>
+    <ContentView.Content>
+        <StackLayout>
+            <Label Text="ZONE" /> 
+        </StackLayout>
+    </ContentView.Content>
 </ContentView>

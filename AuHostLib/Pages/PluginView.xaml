@@ -3,7 +3,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:pages="clr-namespace:AuHost.Pages;assembly=AuHostLib"
              x:Class="AuHost.Pages.PluginView" x:DataType="pages:PluginView">
-    <StackLayout>
-        <Label Text="{Binding Item.Id }" /> 
-    </StackLayout>
+    <ContentView.Content>
+        <StackLayout>
+            <Label Text="{Binding Item.Id }" /> 
+        </StackLayout>
+    </ContentView.Content>
 </ContentView>

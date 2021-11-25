@@ -17,7 +17,7 @@ namespace AuHost.Pages
             defaultBindingMode:BindingMode.OneWay
         );
 
-        private readonly StackLayoutHelper<Rack, ZoneView> helper = new StackLayoutHelper<Rack, ZoneView>();
+        private readonly StackLayoutHelper<Rack, ZoneView, Zone> helper = new StackLayoutHelper<Rack, ZoneView, Zone>();
 
         public Rack Item
         {
