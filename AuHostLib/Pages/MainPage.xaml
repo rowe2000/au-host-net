@@ -3,10 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:AuHost.ViewModels;assembly=AuHostLib"
              xmlns:pages="clr-namespace:AuHost.Pages;assembly=AuHostLib"
-             x:Class="AuHost.Pages.MainPage">
-    <ContentPage.BindingContext>
-        <viewModels:MainViewModel/>
-    </ContentPage.BindingContext>
+             x:Class="AuHost.Pages.MainPage" x:DataType="viewModels:MainPageViewModel">
+    
     <StackLayout Orientation="Horizontal">
         
         <!-- AudioUnits -->
@@ -35,7 +33,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <pages:FrameView BindingContext="{Binding Frame.Items}" />
-        
+        <pages:FrameView x:Name= "FrameView" />
+
     </StackLayout>
 </ContentPage>

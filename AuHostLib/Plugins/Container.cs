@@ -10,15 +10,16 @@ using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace AuHost.Plugins
 {
-    public class Container<TItem> : INotifyPropertyChanged, IContainer, IList<TItem> where TItem : class, IItem
+    public class Container<TItem> : IContainer, IList<TItem> where TItem : class, IItem
     {
-        public ObservableRangeCollection<TItem> Items { get; } = new ObservableRangeCollection<TItem>();
+        private readonly ObservableRangeCollection<TItem> items = new ObservableRangeCollection<TItem>();
 
+        public IEnumerable<TItem> Items => items.ToArray();
         public event Action<ChangedEvent<TItem>> Changed;
 
         public Container()
         {
-            Items.CollectionChanged += (_, e) =>
+            items.CollectionChanged += (_, e) =>
             {
                 OnCollectionChanged(e);
                 OnChanged(new ChangedEvent<TItem>(e.Action, e.NewItems.OfType<TItem>().ToArray()));
@@ -27,7 +28,7 @@ namespace AuHost.Plugins
 
         public T GetItemDeep<T>(int id) where T : class
         {
-            foreach (var item in Items)
+            foreach (var item in items)
             {
                 if (item.Id == id)
                     return item as T;
@@ -43,7 +44,7 @@ namespace AuHost.Plugins
             return null;
         }
 
-        public bool HasItems() => Items.Any();
+        public bool HasItems() => items.Any();
 
         public List<T> GetPath<T>() where T : class, IContainer
         {
@@ -59,38 +60,38 @@ namespace AuHost.Plugins
             return path;
         }
 
-        public int DeepCount<T>() => Items.Count + Items.Sum(item => (item as IContainer)?.DeepCount<T>()) ?? 0;
+        public int DeepCount<T>() => items.Count + items.Sum(item => (item as IContainer)?.DeepCount<T>()) ?? 0;
 
         public void Add(TItem item) => AddRange(item.ToMany());
-        public void AddRange(IEnumerable<TItem> items)
+        public void AddRange(IEnumerable<TItem> addItems)
         {
-            var index = Items.Count;
-            var array = items.Where(o => o != null).ToArray();
+            var index = items.Count;
+            var array = addItems.Where(o => o != null).ToArray();
             foreach (var item in array)
             {
                 item.Parent = this;
                 item.Index = index;
             }
             
-            Items.AddRange(array);
+            items.AddRange(array);
             OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Add, array, index));
         }
 
         public void Clear()
         {
-            foreach (var item in Items)
+            foreach (var item in items)
             {
                 item.Parent = null;
                 item.Index = -1;
             }
 
-            Items.Clear();
+            items.Clear();
             OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Reset));
         }
 
-        public bool Contains(TItem item) => Items.Contains(item);
+        public bool Contains(TItem item) => items.Contains(item);
 
-        public void CopyTo(TItem[] array, int arrayIndex) => Items.CopyTo(array, arrayIndex);
+        public void CopyTo(TItem[] array, int arrayIndex) => items.CopyTo(array, arrayIndex);
 
         public bool Remove(TItem item)
         {
@@ -100,28 +101,28 @@ namespace AuHost.Plugins
             item.Parent = null;
             item.Index = -1;
             
-            var removed = Items.Remove(item);
+            var removed = items.Remove(item);
             if (removed)
                 OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, item));
             
             return removed;
         }
 
-        public int Count => Items.Count;
+        public int Count => items.Count;
         public bool IsReadOnly => false;
-        public int IndexOf(TItem item) => Items.IndexOf(item);
+        public int IndexOf(TItem item) => items.IndexOf(item);
 
         public void Insert(int index, TItem item) => InsertRange(index, item.ToMany());
-        public void InsertRange(int index, IEnumerable<TItem> items)
+        public void InsertRange(int index, IEnumerable<TItem> insertItems)
         {
-            var array = items.Where(o => o != null).ToArray();
+            var array = insertItems.Where(o => o != null).ToArray();
             var i = index;
             
             foreach (var item in array)
             {
                 item.Parent = this;
                 item.Index = index;
-                Items.Insert(i++, item);
+                items.Insert(i++, item);
             }
 
             OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Add, array, index));
@@ -129,20 +130,20 @@ namespace AuHost.Plugins
 
         public void RemoveAt(int index)
         {
-            if (index < 0 && index >= Items.Count)
+            if (index < 0 && index >= items.Count)
                 throw new ArgumentOutOfRangeException();
             
-            var item = Items[index];
+            var item = items[index];
             item.Parent = null;
             item.Index = -1;
             
-            Items.RemoveAt(index);
+            items.RemoveAt(index);
             OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, item, index));
         }
 
-        public void RemoveRange(IEnumerable<TItem> items)
+        public bool RemoveRange(IEnumerable<TItem> removeItems)
         {
-            var array = items.Where(o => o != null).ToArray();
+            var array = removeItems.Where(o => o != null).ToArray();
             
             foreach (var item in array)
             {
@@ -150,37 +151,39 @@ namespace AuHost.Plugins
                 item.Index = -1;
             }
             
-            Items.RemoveRange(array);
+            items.RemoveRange(array);
 
             OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Remove, array));
+            return true;
         }
 
         public void RemoveRange(int index, int count)
         {
-            if (index < 0 && count < 0 && index + count >= Items.Count)
+            if (index < 0 && count < 0 && index + count >= items.Count)
                 throw new ArgumentOutOfRangeException();
             
-            var items = Items.Skip(index).Take(count).ToArray();
-            foreach (var item in items)
+            var array = items.Skip(index).Take(count).ToArray();
+            foreach (var item in array)
             {
                 item.Parent = null;
                 item.Index = -1;
             }
-            RemoveRange(items);
+            
+            RemoveRange(array);
         }
 
         public TItem this[int index]
         {
-            get => Items[index];
+            get => items[index];
             set
             {
-                var old = Items[index];
+                var old = items[index];
                 old.Index = -1;
                 old.Parent = null;
                 
                 value.Index = index;
                 value.Parent = this;
-                Items[index] = value;
+                items[index] = value;
 
                 OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Replace, value, index));
             }
@@ -188,10 +191,10 @@ namespace AuHost.Plugins
 
         public void Move(int index, int newIndex)
         {
-            var item = Items[index];
+            var item = items[index];
 
-            Items.RemoveAt(index);
-            Items.Insert(newIndex, item);
+            items.RemoveAt(index);
+            items.Insert(newIndex, item);
             item.Index = newIndex;
 
             OnChanged(new ChangedEvent<TItem>(NotifyCollectionChangedAction.Move, item, index));
@@ -201,45 +204,45 @@ namespace AuHost.Plugins
 
         public void FixIndices()
         {
-            for (var i = 0; i < Items.Count; i++) 
-                Items[i].Index = i;
+            for (var i = 0; i < items.Count; i++) 
+                items[i].Index = i;
         }
 
         public void Move(int fromIndex, IContainer newOwner)
         {
             // Move items with index >= fromIndex
-            var items = Items.Skip(fromIndex).ToArray();
-            RemoveRange(fromIndex, items.Length);
-            newOwner.AddItems(items);
+            var array = items.Skip(fromIndex).ToArray();
+            RemoveRange(fromIndex, array.Length);
+            newOwner.AddItems(array);
         }
         
-        public ICacheable GetLastItem() => Items.LastOrDefault() as ICacheable;
-        public ICacheable GetFirstItem() => Items.FirstOrDefault() as ICacheable;
-        public T GetItem<T>(int index) where T : class => index > -1 && index < Items.Count ? Items[index] as T : null;
-        public bool Remove(IItem item) => Items.Remove(item as TItem);
-        public void Add(IItem item) => Items.Add(item as TItem);
-        public void Insert(IItem item, int index) => Items.Insert(index, item as TItem);
+        public ICacheable GetLastItem() => items.LastOrDefault() as ICacheable;
+        public ICacheable GetFirstItem() => items.FirstOrDefault() as ICacheable;
+        public T GetItem<T>(int index) where T : class => index > -1 && index < items.Count ? items[index] as T : null;
+        public bool Remove(IItem item) => RemoveRange((item as TItem).ToMany());
+        public void Add(IItem item) => AddRange((item as TItem).ToMany());
+        public void Insert(IItem item, int index) => InsertRange(index, (item as TItem).ToMany());
 
         public void Move(IItem item, int newIndex)
         {
-            if (Items != null
+            if (items?.Any() == true
                 && newIndex != item.Index
                 && newIndex > -1
-                && newIndex < Items.Count)
+                && newIndex < items.Count)
             {
                 Move(item.Index, newIndex);
             }
         }
 
-        public void AddItems(IEnumerable items) => Items.AddRange(items.OfType<TItem>());
+        public void AddItems(IEnumerable addItems) => AddRange(addItems.OfType<TItem>());
         IEnumerator<TItem> IEnumerable<TItem>.GetEnumerator()
         {
-            return Items.GetEnumerator();
+            return items.GetEnumerator();
         }
 
         public IEnumerator GetEnumerator()
         {
-            return Items.GetEnumerator();
+            return items.GetEnumerator();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;

@@ -1,3 +1,4 @@
+using System;
 using AuHost.Plugins;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
@@ -7,14 +8,7 @@ namespace AuHost.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ZoneView : ContentView, IItemView<Plugins.Zone>
     {
-        public static BindableProperty BindableProperty { get; } = BindableProperty.Create(
-            nameof(Item),
-            typeof(Zone), 
-            typeof(ZoneView),
-            defaultBindingMode:BindingMode.OneWay
-        );
-        
-        private readonly StackLayoutHelper<Zone, StripView, Strip> helper = new StackLayoutHelper<Zone, StripView, Strip>();
+        private readonly StackLayoutHelper<Zone, StripView, Strip> helper;
 
         public Zone Item
         {
@@ -25,7 +19,12 @@ namespace AuHost.Pages
         public ZoneView()
         {
             InitializeComponent();
-            Content = helper.StackLayout;
-        }    
+            helper = new StackLayoutHelper<Zone, StripView, Strip>(StripStack);
+        }
+
+        private void OnAddStripClicked(object sender, EventArgs e)
+        {
+            PluginGraph.Instance.AddNewStrip(Item);
+        }
     }
 }

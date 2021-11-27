@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace AuHost.Plugins
 {
@@ -9,6 +10,13 @@ namespace AuHost.Plugins
         where TParent : class, IContainer
     {
         public new Container<TItem> Items => (Container<TItem>) base.Items;
+
+        protected Cacheable(int id) : base(id)
+        {
+            base.Items = new Container<TItem>();
+            Items.CollectionChanged += OnCollectionChanged;
+            Items.PropertyChanged += OnPropertyChanged;
+        }
 
         public ICacheable GetPreviousDeep()
         {
@@ -66,7 +74,7 @@ namespace AuHost.Plugins
 
         public void Move(IItem item, int index) => Items.Move(item, index);
 
-        public void AddItems(IEnumerable items) => Items.AddItems(items);
+        public void AddItems(IEnumerable addItems) => Items.AddItems(addItems);
         public void Move(int fromIndex, IContainer newOwner) => Items.Move(fromIndex, newOwner);
         public void Clear() => Items.Clear();
 
@@ -76,16 +84,23 @@ namespace AuHost.Plugins
 
         public void FixIndices() => Items.FixIndices();
 
-        protected Cacheable(int id) : base(id)
-        {
-            base.Items = new Container<TItem>();
-        }
-
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        protected virtual void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        protected virtual void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(this, e);
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
+        {
+            PropertyChanged?.Invoke(sender, e);
+        }
+
+        public IEnumerator GetEnumerator()
+        {
+            return Items.GetEnumerator();
         }
     }
 }

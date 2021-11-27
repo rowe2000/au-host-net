@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
+using System.ComponentModel;
 
 namespace AuHost.Plugins
 {
-    public interface IContainer : INotifyCollectionChanged
+    public interface IContainer : INotifyCollectionChanged, INotifyPropertyChanged, IEnumerable 
     {
         T GetItem<T>(int index) where T : class;
 
@@ -21,7 +22,7 @@ namespace AuHost.Plugins
 
         void Move(IItem item, int index);
 
-        void AddItems(IEnumerable items);
+        void AddItems(IEnumerable addItems);
         void Move(int fromIndex, IContainer newOwner);
 
         void Clear();

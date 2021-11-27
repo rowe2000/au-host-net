@@ -9,7 +9,9 @@ namespace AuHost.Pages
         public MainPage()
         {
             InitializeComponent();
-            BindingContext = new MainViewModel();
+            var mainPageViewModel = new MainPageViewModel();
+            BindingContext = mainPageViewModel;
+            FrameView.Item = mainPageViewModel.Frame;
         }
     }
 }

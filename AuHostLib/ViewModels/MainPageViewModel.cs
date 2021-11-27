@@ -12,13 +12,13 @@ using Frame = AuHost.Plugins.Frame;
 
 namespace AuHost.ViewModels
 {
-    public class MainViewModel : INotifyPropertyChanged, INotifyCollectionChanged
+    public sealed class MainPageViewModel : INotifyPropertyChanged, INotifyCollectionChanged
     {
         public ObservableRangeCollection<AudioComponent> AudioComponents { get; }
 
         public ObservableRangeCollection<Grouping<string, AudioComponent>> Manufactures { get; }
 
-        public MainViewModel()
+        public MainPageViewModel()
         {
             AudioComponents = PluginGraph.Instance.AudioUnitManager.ViewModelAudioComponents;
             Manufactures = new ObservableRangeCollection<Grouping<string, AudioComponent>>(
@@ -26,7 +26,7 @@ namespace AuHost.ViewModels
                     .GroupBy(o => o.Manufacture)
                     .Select(o => new Grouping<string, AudioComponent>(o.Key, o.ToArray())));
             
-            Frame.Items.CollectionChanged += OnCollectionChanged;
+            Frame.CollectionChanged += OnCollectionChanged;
         }
 
 
@@ -34,19 +34,20 @@ namespace AuHost.ViewModels
         public Frame Frame { get; } = PluginGraph.Instance.Frame;
         public SceneBar SceneBar { get; } = new SceneBar();
         public ToolBar ToolBar { get; } = new ToolBar();
+        public MidiDeviceManager MidiDeviceManager => PluginGraph.Instance.MidiDeviceManager;
 
         public AudioComponent SelectedAudioComponent { get; set; }
 
-        public ICommand AddRackTask { get; } = new Command(async () => await PluginGraph.Instance.AddNewRack());
+        public ICommand AddRackTask { get; } = new Command( () => PluginGraph.Instance.AddNewRack());
 
         public event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "") => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
         public event NotifyCollectionChangedEventHandler CollectionChanged;
 
-        protected virtual void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void OnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             CollectionChanged?.Invoke(sender, e);
         }

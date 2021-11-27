@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using AuHost.Commands;
 using AVFoundation;
 using Foundation;
+using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace AuHost.Plugins
 {
@@ -35,6 +36,7 @@ namespace AuHost.Plugins
         public List<Command> NonSceneCommands { get; } = new List<Command>();
 
         public CommandStack Commands { get; } = new CommandStack();
+        public ObservableRangeCollection<string> MidiInputs { get; set; }
 
         public PluginGraph()
         {
@@ -106,27 +108,28 @@ namespace AuHost.Plugins
             AddNewRack(false);
         }
 
-        public Task AddNewRack(bool beforeSelectedRack = false)
+        public void AddNewRack(bool beforeSelectedRack = false)
         {
             var currentScene = Document.CurrentScene;
             Document.Launch(Document);
 
             var rackIndex = SelectedRack?.Index + (beforeSelectedRack ? 0 : 1) ?? Frame.Count;
-            Execute(new AddRack(rackIndex));
+            var addRack = new AddRack(rackIndex);
+            Execute(addRack);
 
             Document.Launch(currentScene);
 
-            AddNewZone(SelectedRack);
-            return Task.CompletedTask;
+            AddNewZone(addRack.NewRack);
         }
 
         public void AddNewZone(Rack rack = null, bool beforeSelectedZone = false)
         {
             rack = rack ?? SelectedRack;
             var zoneIndex = SelectedZone?.Index + (beforeSelectedZone ? 0 : 1) ?? rack.Count;
-            Execute(new AddZone(rack, zoneIndex));
+            var addZone = new AddZone(rack, zoneIndex);
+            Execute(addZone);
 
-            AddNewStrip(null, false);
+            AddNewStrip(addZone.NewZone);
         }
 
         public void AddNewStrip(Zone zone = null, bool beforeSelectedStrip = false)
@@ -201,8 +204,8 @@ namespace AuHost.Plugins
         
         private AVAudioUnit midiInDev;
 
-        private MidiConnector midiConnector = new MidiConnector();
-        
+        public MidiDeviceManager MidiDeviceManager { get; } = new MidiDeviceManager();
+
         public async void Load()
         {
             // AUAudioUnit.RegisterSubclass(
@@ -224,7 +227,7 @@ namespace AuHost.Plugins
                     // View.AddSubview(view.View);
                 });
                 
-                midiConnector.MessagesReceived += m =>
+                MidiDeviceManager.MessagesReceived += m =>
                 {
                     foreach (var midiMessage in m)
                     {

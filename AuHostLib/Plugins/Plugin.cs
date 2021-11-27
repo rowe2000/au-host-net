@@ -8,6 +8,7 @@ namespace AuHost.Plugins
 {
     public class Plugin : Cacheable<IItem, Strip>, IPresetable
     {
+         
         public AVAudioUnit AVAudioUnit { get; private set; }
         
         public Preset Preset { get; set; }

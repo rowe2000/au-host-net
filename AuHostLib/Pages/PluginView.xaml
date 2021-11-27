@@ -5,7 +5,7 @@
              x:Class="AuHost.Pages.PluginView" x:DataType="pages:PluginView">
     <ContentView.Content>
         <StackLayout>
-            <Label Text="{Binding Item.Id }" /> 
+            <Label Text="{Binding Item.Name }" /> 
         </StackLayout>
     </ContentView.Content>
 </ContentView>

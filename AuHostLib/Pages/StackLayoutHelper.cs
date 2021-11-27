@@ -10,15 +10,13 @@ namespace AuHost.Pages
     public class StackLayoutHelper<TItem, TItemView, TSubItem> where TItem : INotifyCollectionChanged 
         where TItemView : View, IItemView<TSubItem>, new()
     {
-        public StackLayout StackLayout { get; } = new StackLayout();
+        public StackLayout StackLayout { get; }
 
         private TItem item;
 
-        public StackLayoutHelper()
+        public StackLayoutHelper(StackLayout stackLayout)
         {
-            StackLayout = new StackLayout();
-            var label = new Label { Text = typeof(TSubItem).ToString() };
-            StackLayout.Children.Add(label);
+            StackLayout = stackLayout;
         }
 
         public TItem Item

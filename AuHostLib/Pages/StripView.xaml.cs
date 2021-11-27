@@ -10,14 +10,7 @@ namespace AuHost.Pages
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StripView : ContentView, IItemView<Plugins.Strip>
     {
-        public static BindableProperty BindableProperty { get; } = BindableProperty.Create(
-            nameof(Item),
-            typeof(Strip), 
-            typeof(StripView),
-            defaultBindingMode:BindingMode.OneWay
-        );
-        
-        private readonly StackLayoutHelper<Strip, PluginView, Plugin> helper = new StackLayoutHelper<Strip, PluginView, Plugin>();
+        private readonly StackLayoutHelper<Strip, PluginView, Plugin> helper;
 
         public Strip Item
         {
@@ -28,7 +21,11 @@ namespace AuHost.Pages
         public StripView()
         {
             InitializeComponent();
-            Content = helper.StackLayout;
-        }    
+            helper = new StackLayoutHelper<Strip, PluginView, Plugin>(PluginStack);
+        }
+
+        private void OnAddPluginClicked(object sender, EventArgs e)
+        {
+        }
     }
 }

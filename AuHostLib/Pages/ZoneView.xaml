@@ -3,8 +3,10 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="AuHost.Pages.ZoneView">
     <ContentView.Content>
-        <StackLayout>
-            <Label Text="ZONE" /> 
+        <StackLayout Orientation="Horizontal">
+            <Button Text="Split"/>
+            <StackLayout x:Name="StripStack" Orientation="Vertical" />
+            <Button Text="Add strip" Clicked="OnAddStripClicked"></Button>
         </StackLayout>
     </ContentView.Content>
 </ContentView>
