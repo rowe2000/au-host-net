@@ -1,3 +1,5 @@
+using AuHost.Plugins;
+
 namespace AuHost.ViewModels
 {
     public class SceneBar

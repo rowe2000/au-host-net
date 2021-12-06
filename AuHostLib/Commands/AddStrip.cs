@@ -16,7 +16,7 @@ namespace AuHost.Commands
 
         public AddStrip(Zone zone, int stripIndex, StripType stripType)
         {
-            StripId = Document.GetNextId();
+            StripId = Cache.Instance.GetNextId();
             ZoneId = zone.Id;
             StripIndex = stripIndex;
             StripType = stripType;
@@ -24,11 +24,12 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var zone = Cache.GetItem<Zone>(ZoneId);
+            var zone = Cache.Instance.GetItem<Zone>(ZoneId);
             if (zone == null)
                 return false;
 
-            strip = Cache.Create<Strip>(StripId);
+            strip = Cache.Instance.Create<Strip>();
+            StripId = strip.Id;
             zone.Insert(strip, StripIndex);
 
             Push(new SelectStrip(strip));

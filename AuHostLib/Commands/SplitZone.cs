@@ -31,7 +31,9 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var zone = Cache.GetItem<Zone>(ZoneId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var zone = Cache.Instance.GetItem<Zone>(ZoneId);
             if (zone == null) 
                 return false;
             
@@ -63,13 +65,10 @@ namespace AuHost.Commands
         
         public override bool Undo()
         {
-            if (base.Undo())
-            {
-                return true;
-            }
-
-            return false;
+            if (!base.Undo()) 
+                return false;
+            
+            return true;
         }
-
     }
 }

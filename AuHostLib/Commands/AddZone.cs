@@ -9,9 +9,7 @@ namespace AuHost.Commands
         public override bool SaveInScene => true;
 
         public int ZoneIndex { get; set; }
-
         public int RackId { get; set; }
-
         public int ZoneId { get; set; }
 
         public AddZone(Rack rack, int zoneIndex)
@@ -22,12 +20,14 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var rack = Cache.GetItem<Rack>(RackId);
-
-            NewZone = Cache.Create<Zone>(ZoneId);
+            var rack = Cache.Instance.GetItem<Rack>(RackId);
+            NewZone = Cache.Instance.Create<Zone>();
+            ZoneId = NewZone.Id;
+            
             rack.Insert(NewZone, ZoneIndex);
 
             Push(new SelectZone(NewZone));
+
             return base.Execute();
         }
 

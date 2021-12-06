@@ -1,11 +1,10 @@
 using System;
 using System.Collections.Specialized;
 using System.Linq;
-using System.Reflection;
 using AuHost.Plugins;
 using Xamarin.Forms;
 
-namespace AuHost.Pages
+namespace AuHost.Views
 {
     public class StackLayoutHelper<TItem, TItemView, TSubItem> where TItem : INotifyCollectionChanged 
         where TItemView : View, IItemView<TSubItem>, new()
@@ -47,7 +46,7 @@ namespace AuHost.Pages
                 case NotifyCollectionChangedAction.Move:
                     foreach (IItem newItem in e.NewItems)
                     {
-                        var view = StackLayout.Children.First(o => Equals(((IItemView<Rack>)o).Item, newItem));
+                        var view = StackLayout.Children.First(o => Equals(((IItemView<TSubItem>)o).Item, newItem));
                         StackLayout.Children.Remove(view);
                         StackLayout.Children.Insert(newItem.Index, view);
                     }
@@ -57,7 +56,7 @@ namespace AuHost.Pages
                 case NotifyCollectionChangedAction.Remove:
                     foreach (IItem newItem in e.NewItems)
                     {
-                        var view = StackLayout.Children.First(o => Equals(((IItemView<Rack>)o).Item, newItem));
+                        var view = StackLayout.Children.First(o => Equals(((IItemView<TSubItem>)o).Item, newItem));
                         StackLayout.Children.Remove(view);
                     }
 
@@ -66,7 +65,7 @@ namespace AuHost.Pages
                 case NotifyCollectionChangedAction.Replace:
                     foreach (IItem newItem in e.NewItems)
                     {
-                        var view = StackLayout.Children.First(o => Equals(((IItemView<Rack>)o).Item, newItem));
+                        var view = StackLayout.Children.First(o => Equals(((IItemView<TSubItem>)o).Item, newItem));
                         StackLayout.Children.Remove(view);
                         StackLayout.Children.Insert(newItem.Index, view);
                     }

@@ -8,17 +8,13 @@ namespace AuHost.Commands
         private List<Scene> addedScenes = new List<Scene>();
 
         public override bool SaveInScene => false;
-
-        public int RackIndex { get; set; }
-
-        public int RackId { get; set; }
         public int InsertIndex { get; set; }
         public IEnumerable<string> Names { get; set; }
         public int OwnerSceneId { get; set; }
         
         public override bool Execute()
         {
-            var ownerScene = Cache.GetItem<Scene>(OwnerSceneId);
+            var ownerScene = Cache.Instance.GetItem<Scene>(OwnerSceneId);
             var index = InsertIndex;
             
             foreach (var name in Names)

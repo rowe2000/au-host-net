@@ -8,7 +8,7 @@ namespace AuHost.Commands
         public int ZoneId { get; set; }
         public override bool Execute()
         {
-            var zone = Cache.GetItem<Zone>(ZoneId);
+            var zone = Cache.Instance.GetItem<Zone>(ZoneId);
             if (zone != null)
             {
                 if (zone.Index == 0)

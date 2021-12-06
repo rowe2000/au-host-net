@@ -14,7 +14,7 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var plugin = Cache.GetItem<Plugin>(PluginId);
+            var plugin = Cache.Instance.GetItem<Plugin>(PluginId);
             Push(new DisconnectNode(plugin));
 
             var prevNode = plugin.GetPreviousSibling<Plugin>();

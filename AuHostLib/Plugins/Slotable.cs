@@ -4,10 +4,6 @@ namespace AuHost.Plugins
         where TParent : class, IContainer
         where TChild : class, IItem
     {
-        protected Preset Preset { get; set; }
-
-        protected Slotable() : base(Document.GetNextId())
-        {
-        }
+        public Preset Preset { get; set; }
     }
 }

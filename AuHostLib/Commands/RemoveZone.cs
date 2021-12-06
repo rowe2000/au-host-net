@@ -16,7 +16,7 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            zone = Cache.GetItem<Zone>(ZoneId);
+            zone = Cache.Instance.GetItem<Zone>(ZoneId);
             rack = zone.Parent;
             zoneIndex = zone.Index;
             zone.RemoveFromParent();

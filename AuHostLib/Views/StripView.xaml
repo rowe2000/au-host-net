@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="AuHost.Pages.ZoneView">
+             x:Class="AuHost.Views.StripView">
     <ContentView.Content>
         <StackLayout Orientation="Horizontal">
-            <Button Text="Split"/>
-            <StackLayout x:Name="StripStack" Orientation="Vertical" />
-            <Button Text="Add strip" Clicked="OnAddStripClicked"></Button>
+            <Label Text="PLUGINS" />
+            <StackLayout x:Name="PluginStack" Orientation="Horizontal">
+            </StackLayout>
+            <Button Text="Add plugin" Clicked="OnAddPluginClicked"></Button>
         </StackLayout>
     </ContentView.Content>
 </ContentView>

@@ -1,15 +1,10 @@
 using System.Windows.Input;
-using Xamarin.Forms;
+using AuHost.Commands;
 
 namespace AuHost.Plugins
 {
-    public class Zone : Cacheable<Strip, Rack>, IPresetable
+    public class Zone : Slotable<Strip, Rack>, IPresetable
     {
-        public Zone() : base(Document.GetNextId())
-        {
-        }
-        
-        public Preset Preset { get; set; }
         public Preset GetOrCreatePreset()
         {
             return Preset;
@@ -17,7 +12,13 @@ namespace AuHost.Plugins
 
         public Interval<int> SplitRange { get; }
 
-        public ICommand AddStripTask => new Command(() => PluginGraph.Instance.AddNewStrip(this));
+        public ICommand AddNewStrip => new Xamarin.Forms.Command(OnAddNewStrip);
+
+        public void OnAddNewStrip()
+        {
+            var addStrip = new AddStrip(this, Count, StripType.Instrument);
+            PluginGraph.Instance.CommandExecutor.Execute(addStrip);
+        }
 
         public void SetSplitNote(int startNote)
         {

@@ -1,6 +1,6 @@
 namespace AuHost.ViewModels
 {
-    public class Plugin : Item
+    public class ZoneViewModel
     {
     }
 }

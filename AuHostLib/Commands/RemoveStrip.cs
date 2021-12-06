@@ -13,7 +13,9 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            strip = Cache.GetItem<Strip>(StripId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            strip = Cache.Instance.GetItem<Strip>(StripId);
             stripIndex = strip.Index;
             zone = strip.Parent;
             strip.RemoveFromParent();

@@ -11,7 +11,7 @@ namespace AuHost.Plugins
     {
         public new Container<TItem> Items => (Container<TItem>) base.Items;
 
-        protected Cacheable(int id) : base(id)
+        protected Cacheable() : base(Cache.Instance.GetNextId())
         {
             base.Items = new Container<TItem>();
             Items.CollectionChanged += OnCollectionChanged;
@@ -52,7 +52,7 @@ namespace AuHost.Plugins
             return item;
         }
 
-        public T GetItem<T>(int index) where T : class => Items.GetItem<T>(index);
+        public virtual T GetItem<T>(int index) where T : class => Items.GetItem<T>(index);
 
         public bool Remove(IItem item) => Items.Remove(item);
 

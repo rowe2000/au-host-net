@@ -2,13 +2,15 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:AuHost.ViewModels;assembly=AuHostLib"
-             xmlns:pages="clr-namespace:AuHost.Pages;assembly=AuHostLib"
-             x:Class="AuHost.Pages.MainPage" x:DataType="viewModels:MainPageViewModel">
-    
-    <StackLayout Orientation="Horizontal">
+             xmlns:views="clr-namespace:AuHost.Views;assembly=AuHostLib"
+             x:Class="AuHost.Views.MainPage" x:DataType="viewModels:MainPageViewModel">
+    <ContentPage.BindingContext>
+        <viewModels:MainPageViewModel />
+    </ContentPage.BindingContext>
+        <StackLayout Orientation="Horizontal">
         
         <!-- AudioUnits -->
-        <ListView 
+        <ListView HorizontalOptions="Start" WidthRequest="300" 
             BackgroundColor="Transparent"
             GroupDisplayBinding="{Binding Key}"
             ItemsSource="{Binding AudioComponents}"
@@ -21,7 +23,7 @@
             </ListView.Header>
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <ViewCell>
+                    <ViewCell> 
                         <ViewCell.ContextActions>
                             <MenuItem Text="Launch"></MenuItem>
                             <MenuItem Text="Favorite"></MenuItem>
@@ -33,7 +35,7 @@
             </ListView.ItemTemplate>
         </ListView>
 
-        <pages:FrameView x:Name= "FrameView" />
+        <views:FrameView />
 
-    </StackLayout>
+        </StackLayout>
 </ContentPage>

@@ -10,18 +10,18 @@ namespace AuHost.Commands
             PluginId = plugin.Id;
         }
 
-        public int PluginId { get; set; }
+        public int PluginId { get; }
 
         public override bool Execute()
         {
-            var plugin = Cache.GetItem<Plugin>(PluginId);
-            var rack = plugin.GetParent<Rack>();
-            var connections = plugin.GetConnections();
+            var pluginGraph = PluginGraph.Instance;
+            
+            var connections = Cache.Instance.GetItem<Plugin>(PluginId).GetConnections();
 
             foreach (var connection in connections)
             {
-                var srcPlugin = PluginGraph.GetPluginByAvAudioUnit(connection.Source.AVAudioUnit);
-                var dstPlugin = PluginGraph.GetPluginByAvAudioUnit(connection.Destination.AVAudioUnit);
+                var srcPlugin = pluginGraph.GetPluginByAvAudioUnit(connection.Source.AVAudioUnit);
+                var dstPlugin = pluginGraph.GetPluginByAvAudioUnit(connection.Destination.AVAudioUnit);
                 var srcChannel = connection.Source.ChannelIndex;
                 var dstChannel = connection.Destination.ChannelIndex;
 
@@ -30,6 +30,5 @@ namespace AuHost.Commands
 
             return base.Execute();
         }
-
     }
 }

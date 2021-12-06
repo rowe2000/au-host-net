@@ -13,10 +13,12 @@ namespace AuHost.Commands
         
         public override bool Execute()
         {
-            rack = Cache.GetItem<Rack>(RackId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            rack = Cache.Instance.GetItem<Rack>(RackId);
             rackIndex = rack.Index;
             frame = rack.Parent;
-            rack.RemoveFromParent();
+            frame.Remove(rack);
 
             return base.Execute();
         }

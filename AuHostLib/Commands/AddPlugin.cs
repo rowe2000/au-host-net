@@ -21,8 +21,8 @@ namespace AuHost.Commands
         
         public override bool Execute()
         {
-
-            strip = Cache.GetItem<Strip>(StripId);
+            var pluginGraph = PluginGraph.Instance;
+            strip = Cache.Instance.GetItem<Strip>(StripId);
             plugin = new Plugin(PluginName);
             plugin.Index = PluginIndex;
             plugin.Activate(strip);

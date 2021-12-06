@@ -20,18 +20,24 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var srcPlugin = Cache.GetItem<Plugin>(SrcPluginId);
-            var dstPlugin = Cache.GetItem<Plugin>(DstPluginId);
-            PluginGraph.Instance.RemoveConnection(srcPlugin, SrcChannel, dstPlugin, DstChannel);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var srcPlugin = Cache.Instance.GetItem<Plugin>(SrcPluginId);
+            var dstPlugin = Cache.Instance.GetItem<Plugin>(DstPluginId);
+            
+            pluginGraph.RemoveConnection(srcPlugin, SrcChannel, dstPlugin, DstChannel);
 
             return base.Execute();
         }
 
         public override bool Undo()
         {
-            var srcPlugin = Cache.GetItem<Plugin>(SrcPluginId);
-            var dstPlugin = Cache.GetItem<Plugin>(DstPluginId);
-            PluginGraph.Instance.AddConnection(srcPlugin, SrcChannel, dstPlugin, DstChannel);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var srcPlugin = Cache.Instance.GetItem<Plugin>(SrcPluginId);
+            var dstPlugin = Cache.Instance.GetItem<Plugin>(DstPluginId);
+            
+            pluginGraph.AddConnection(srcPlugin, SrcChannel, dstPlugin, DstChannel);
 
             return base.Undo();
         }

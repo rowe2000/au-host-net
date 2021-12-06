@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace AuHost.Plugins
 {
-    public class Document : Scene
+    public sealed class Document : Scene
     {
-        public event Action<SceneChangeArgument> SceneChanged;
-        public static int MaxId { get; private set; }
-
         public PresetLibrary PresetLibrary { get; } = new PresetLibrary();
+
+        public event Action<SceneChangeArgument> SceneChanged;
+        public int MaxId { get; set; }
 
         public Scene CurrentScene { get; set; }
 
@@ -42,16 +42,11 @@ namespace AuHost.Plugins
 
             var oldScene = CurrentScene;
             CurrentScene = scene;
+            CurrentSceneId = scene?.Id ?? 0;
 
             OnSceneChanged(new SceneChangeArgument(scene, oldScene));
         }
-
-        public static int GetNextId()
-        {
-            MaxId++;
-            return MaxId;
-        }
-
+        
         public Scene GetInitialScene()
         {
             return GetItem<Scene>(CurrentSceneId) ?? this;
@@ -59,7 +54,7 @@ namespace AuHost.Plugins
 
         public int CurrentSceneId { get; set; }
 
-        protected virtual void OnSceneChanged(SceneChangeArgument obj)
+        private void OnSceneChanged(SceneChangeArgument obj)
         {
             SceneChanged?.Invoke(obj);
         }

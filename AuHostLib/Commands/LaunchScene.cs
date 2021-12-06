@@ -11,8 +11,9 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            undoScene = PluginGraph.Instance.Document.CurrentScene;
-            PluginGraph.Instance.Document?.Launch(Cache.GetItem<Scene>(SceneId));
+            var pluginGraph = PluginGraph.Instance;
+            undoScene = pluginGraph.Document.CurrentScene;
+            pluginGraph.Document?.Launch(Cache.Instance.GetItem<Scene>(SceneId));
 
             return base.Execute();
         }

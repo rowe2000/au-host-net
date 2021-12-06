@@ -11,14 +11,15 @@ namespace AuHost.Commands
         
         public override bool Execute()
         {
-            var plugin = Cache.GetItem<Plugin>(PluginId);
+            var pluginGraph = PluginGraph.Instance;
 
+            var plugin = Cache.Instance.GetItem<Plugin>(PluginId);
             if (plugin == null)
                    return false;
 
-            undoPlugin = PluginGraph.Instance.SelectedPlugin;
+            undoPlugin = pluginGraph.SelectedPlugin;
 
-            PluginGraph.Instance.SelectPlugin(plugin);
+            pluginGraph.SelectPlugin(plugin);
 
             return base.Execute();
         }

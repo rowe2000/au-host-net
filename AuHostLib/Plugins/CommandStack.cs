@@ -78,5 +78,11 @@ namespace AuHost.Plugins
 
             return true;
         }
+
+        public void Clear()
+        {
+            doneCommands.Clear();
+            notDoneStack.Clear();
+        }
     }
 }

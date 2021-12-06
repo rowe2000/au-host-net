@@ -1,11 +1,9 @@
 using System;
-using System.Collections.Specialized;
-using System.Linq;
 using AuHost.Plugins;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace AuHost.Pages
+namespace AuHost.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class StripView : ContentView, IItemView<Plugins.Strip>

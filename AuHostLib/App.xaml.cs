@@ -1,5 +1,5 @@
-﻿using AuHost.Pages;
-using AuHost.Plugins;
+﻿using AuHost.Plugins;
+using AuHost.Views;
 using Xamarin.Forms;
 
 namespace AuHost

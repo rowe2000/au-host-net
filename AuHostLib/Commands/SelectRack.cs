@@ -17,13 +17,15 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var rack = Cache.GetItem<Rack>(RackId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var rack = Cache.Instance.GetItem<Rack>(RackId);
             if (rack == null)
                 return false;
 
-            undoRack = PluginGraph.Instance.SelectedRack;
+            undoRack = pluginGraph.SelectedRack;
 
-            PluginGraph.Instance.SelectRack(rack);
+            pluginGraph.SelectRack(rack);
 
             return base.Execute();
         }

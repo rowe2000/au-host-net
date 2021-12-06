@@ -25,8 +25,8 @@ namespace AuHost.Commands
             
             foreach (var connection in plugin.GetConnections())
             {
-                var srcPlugin = PluginGraph.GetPluginByAvAudioUnit(connection.Source.AVAudioUnit);
-                var dstPlugin = PluginGraph.GetPluginByAvAudioUnit(connection.Destination.AVAudioUnit);
+                var srcPlugin = PluginGraph.Instance.GetPluginByAvAudioUnit(connection.Source.AVAudioUnit);
+                var dstPlugin = PluginGraph.Instance.GetPluginByAvAudioUnit(connection.Destination.AVAudioUnit);
                 var srcChannel = connection.Source.ChannelIndex;
                 var dstChannel = connection.Destination.ChannelIndex;
 

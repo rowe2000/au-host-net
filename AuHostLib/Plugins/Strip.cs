@@ -3,20 +3,20 @@ using Xamarin.Forms;
 
 namespace AuHost.Plugins
 {
-    public class Strip : Cacheable<Plugin, Zone>, IPresetable
+    public class Strip : Slotable<Plugin, Zone>, IPresetable
     {
         public NoteTransform NoteTransform;
-        public Preset Preset { get; set; }
+        
+        public ICommand AddPluginTask => new Command(AddNewPlugin);
 
-        public ICommand AddPluginTask => new Command(() => PluginGraph.Instance.AddPlugin());
+        private void AddNewPlugin()
+        {
+            
+        }
 
         public Preset GetOrCreatePreset()
         {
             return Preset;
-        }
-
-        public Strip() : base(Document.GetNextId())
-        {
         }
     }
 }

@@ -5,9 +5,9 @@ namespace AuHost.Commands
     public class AddRack : Command
     {
         public override bool SaveInScene => true;
-        public int RackIndex { get; set; }
+        public int RackIndex { get; }
         public int RackId { get; set; }
-        public Rack NewRack { get; set; }
+        public Rack NewRack { get; private set; }
 
         public AddRack(int rackIndex)
         {
@@ -16,10 +16,11 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            NewRack = Cache.Create<Rack>();
-            RackId = NewRack.Id;
+            var pluginGraph = PluginGraph.Instance;
             
-            PluginGraph.Instance.Frame.Insert(NewRack, RackIndex);
+            NewRack = Cache.Instance.Create<Rack>();
+            RackId = NewRack.Id;
+            pluginGraph.Frame.Insert(NewRack, RackIndex);
 
             Push(new SelectRack(NewRack));
 

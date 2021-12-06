@@ -1,14 +1,11 @@
-using System;
-using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.Linq;
 using AuHost.Plugins;
 using CoreMidi;
 using Xamarin.CommunityToolkit.ObjectModel;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace AuHost.Pages
+namespace AuHost.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class RackView : ContentView, IItemView<Rack>
@@ -40,11 +37,6 @@ namespace AuHost.Pages
         private void InputsOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             MidiInPicker.ItemsSource = PluginGraph.Instance.MidiDeviceManager.Inputs;
-        }
-
-        private void OnAddZoneClicked(object sender, EventArgs e)
-        {
-            PluginGraph.Instance.AddNewZone(Item);
         }
     }
 

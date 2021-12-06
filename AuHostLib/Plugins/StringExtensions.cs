@@ -6,7 +6,7 @@ namespace AuHost.Plugins
     {
         public static bool ContainsOnly(this string text, string p)
         {
-            return text.All(c => p.Contains(c));
+            return text.All(p.Contains);
         }
 
         

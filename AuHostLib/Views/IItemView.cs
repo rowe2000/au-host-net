@@ -1,6 +1,4 @@
-using AuHost.Plugins;
-
-namespace AuHost.Pages
+namespace AuHost.Views
 {
     public interface IItemView<TItem>
     {

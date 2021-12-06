@@ -11,7 +11,9 @@ namespace AuHost.Commands
         public int PluginId { get; set; }
         public override bool Execute()
         {
-            plugin = Cache.GetItem<Plugin>(PluginId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            plugin = Cache.Instance.GetItem<Plugin>(PluginId);
             undoState = plugin.IsWindowShowing();
 
             if (Show)

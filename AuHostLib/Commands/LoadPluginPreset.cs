@@ -12,8 +12,10 @@ namespace AuHost.Commands
         public int PluginPresetId { get; set; }
         public override bool Execute()
         {
-            plugin = Cache.GetItem<Plugin>(PluginId);
-            var preset = Cache.GetItem<Preset>(PluginPresetId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            plugin = Cache.Instance.GetItem<Plugin>(PluginId);
+            var preset = Cache.Instance.GetItem<Preset>(PluginPresetId);
 
             previousPreset = plugin.GetOrCreatePreset();
             plugin.Preset = preset;

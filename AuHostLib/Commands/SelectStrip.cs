@@ -16,13 +16,15 @@ namespace AuHost.Commands
         
         public override bool Execute()
         {
-            var strip = Cache.GetItem<Strip>(StripId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var strip = Cache.Instance.GetItem<Strip>(StripId);
             if (strip == null)
                 return false;
 
-            undoStrip = PluginGraph.Instance.SelectedStrip;
+            undoStrip = pluginGraph.SelectedStrip;
 
-            PluginGraph.Instance.SelectStrip(strip);
+            pluginGraph.SelectStrip(strip);
 
             return base.Execute();
         }

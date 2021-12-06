@@ -19,7 +19,9 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            plugin = Cache.GetItem<Plugin>(PluginId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            plugin = Cache.Instance.GetItem<Plugin>(PluginId);
             undoState = plugin.IsBypassed;
 
             if (undoState != Bypassed)

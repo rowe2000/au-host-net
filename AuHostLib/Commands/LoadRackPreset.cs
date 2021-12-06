@@ -12,8 +12,10 @@ namespace AuHost.Commands
         
         public override bool Execute()
         {
-            var rack = Cache.GetItem<Rack>(RackId);
-            var preset = Cache.GetItem<Preset>(RackPresetId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var rack = Cache.Instance.GetItem<Rack>(RackId);
+            var preset = Cache.Instance.GetItem<Preset>(RackPresetId);
             previousPreset = rack.GetOrCreatePreset();
 
             rack.Preset = preset;
@@ -25,7 +27,9 @@ namespace AuHost.Commands
         {
             PopAll();
 
-            var rack = Cache.GetItem<Rack>(RackId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var rack = Cache.Instance.GetItem<Rack>(RackId);
             rack.Preset = previousPreset;
 
             return base.Undo();

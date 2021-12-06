@@ -32,8 +32,9 @@ namespace AuHost.Plugins
 
         public Scene InsertNewScene(string name, int index)
         {
-            var scene = Cache.Create<Scene>();
-            scene.Index = index;
+            var pluginGraph = PluginGraph.Instance;
+            
+            var scene = Cache.Instance.Create<Scene>();
 
             var texts = name.Split(',');
             if (texts.Any())

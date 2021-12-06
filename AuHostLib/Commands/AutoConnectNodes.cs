@@ -18,8 +18,8 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var srcPlugin = Cache.GetItem<Plugin>(SrcPluginId);
-            var dstPlugin = Cache.GetItem<Plugin>(DstPluginId);
+            var srcPlugin = Cache.Instance.GetItem<Plugin>(SrcPluginId);
+            var dstPlugin = Cache.Instance.GetItem<Plugin>(DstPluginId);
 
             if (srcPlugin != null && dstPlugin != null)
             {

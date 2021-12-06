@@ -3,7 +3,7 @@ using AuHost.Plugins;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
-namespace AuHost.Pages
+namespace AuHost.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class ZoneView : ContentView, IItemView<Plugins.Zone>
@@ -24,7 +24,7 @@ namespace AuHost.Pages
 
         private void OnAddStripClicked(object sender, EventArgs e)
         {
-            PluginGraph.Instance.AddNewStrip(Item);
+            Item.OnAddNewStrip();
         }
     }
 }

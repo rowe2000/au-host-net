@@ -4,8 +4,5 @@ namespace AuHost.Plugins
         where TChild : class, IItem 
         where TParent : class, IContainer
     {
-        public Storable() : base(Document.GetNextId())
-        {
-        }
     }
 }

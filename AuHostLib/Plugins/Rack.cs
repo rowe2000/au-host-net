@@ -1,24 +1,34 @@
 using System.Windows.Input;
-using Xamarin.Forms;
+using AuHost.Commands;
 
 namespace AuHost.Plugins
 {
-    public class Rack : Cacheable<Zone, Frame>, IPresetable
+    public class Rack : Slotable<Zone, Frame>, IPresetable
     {
-        public Preset Preset { get; set; }
+        public ICommand AddZoneCmd { get; }
 
-        public ICommand AddZoneTask { get; }
-
-        public int RackHeight => Items.Count * 50;
+        public object MidiInputs
+        {
+            get { throw new System.NotImplementedException(); }
+        }
 
         public Preset GetOrCreatePreset()
         {
             return Preset;
         }
 
-        public Rack() : base(Document.GetNextId())
+        public Rack()
         {
-            AddZoneTask = new Command(() => PluginGraph.Instance.AddNewZone(this));
+            AddZoneCmd = new Xamarin.Forms.Command(() => AddNewZone());
+        }
+
+        public void AddNewZone(bool before = false)
+        {
+            var zoneIndex = PluginGraph.Instance.SelectedZone?.Index + (before ? 0 : 1) ?? Count;
+            var addZone = new AddZone(this, zoneIndex);
+            PluginGraph.Instance.CommandExecutor.Execute(addZone);
+
+            addZone.NewZone.OnAddNewStrip();
         }
     }
 }

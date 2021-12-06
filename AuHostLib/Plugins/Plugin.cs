@@ -6,12 +6,11 @@ using AVFoundation;
 
 namespace AuHost.Plugins
 {
-    public class Plugin : Cacheable<IItem, Strip>, IPresetable
+    public class Plugin : Slotable<IItem, Strip>, IPresetable
     {
          
         public AVAudioUnit AVAudioUnit { get; private set; }
         
-        public Preset Preset { get; set; }
         public Preset GetOrCreatePreset()
         {
             return Preset;
@@ -20,7 +19,7 @@ namespace AuHost.Plugins
         public bool IsBypassed { get; set; }
         public bool IsDeleting { get; set; }
 
-        public Plugin(string name) : base(Document.GetNextId())
+        public Plugin(string name)
         {
             Name = name;
         }
@@ -34,7 +33,7 @@ namespace AuHost.Plugins
                 return;
             }
             
-            PluginGraph.Register(this);
+            PluginGraph.Instance.Register(this);
             strip.Insert(this, Index);
         }
     

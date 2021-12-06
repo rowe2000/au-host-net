@@ -16,13 +16,15 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var zone = Cache.GetItem<Zone>(ZoneId);
+            var pluginGraph = PluginGraph.Instance;
+            
+            var zone = Cache.Instance.GetItem<Zone>(ZoneId);
             if (zone == null)
                 return false;
 
-            undoSelectedZone = PluginGraph.Instance.SelectedZone;
+            undoSelectedZone = pluginGraph.SelectedZone;
 
-            PluginGraph.Instance.SelectZone(zone);
+            pluginGraph.SelectZone(zone);
 
             return base.Execute();
         }
