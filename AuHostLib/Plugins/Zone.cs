@@ -16,7 +16,7 @@ namespace AuHost.Plugins
 
         public void OnAddNewStrip()
         {
-            var addStrip = new AddStrip(this, Count, StripType.Instrument);
+            var addStrip = new AddStrip(this, Items.Count, StripType.Instrument);
             PluginGraph.Instance.CommandExecutor.Execute(addStrip);
         }
 

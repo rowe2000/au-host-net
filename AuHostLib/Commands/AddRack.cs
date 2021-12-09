@@ -20,7 +20,7 @@ namespace AuHost.Commands
             
             NewRack = Cache.Instance.Create<Rack>();
             RackId = NewRack.Id;
-            pluginGraph.Frame.Insert(NewRack, RackIndex);
+            pluginGraph.Frame.Items.Insert(RackIndex, NewRack);
 
             Push(new SelectRack(NewRack));
 

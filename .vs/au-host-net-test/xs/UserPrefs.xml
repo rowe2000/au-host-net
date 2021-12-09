@@ -1,0 +1,27 @@
+﻿<Properties StartupConfiguration="{656E0501-6BA7-49E9-8308-388A5A4FAFBA}|Default">
+  <MonoDevelop.Ide.ItemProperties.AuHost.macOS PreferredExecutionTarget="Test1" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="AuHost.macOS/Main.cs">
+    <Files>
+      <File FileName="AuHostLib/AuHostLib.csproj" Line="1" Column="1" />
+      <File FileName="../../.nuget/packages/xamarin.forms/5.0.0.2244/buildTransitive/Xamarin.Forms.targets" Line="119" Column="3" />
+      <File FileName="AuHost.macOS/Main.cs" Line="15" Column="1" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="au-host-net-test" expanded="True">
+            <Node name="AuHost.macOS" expanded="True">
+              <Node name="References" expanded="True" selected="True" />
+            </Node>
+          </Node>
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MultiItemStartupConfigurations />
+</Properties>

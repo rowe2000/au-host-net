@@ -3,14 +3,18 @@ using AuHost.Commands;
 
 namespace AuHost.Plugins
 {
-    public class Frame : Container<Rack>
+    public class Frame : IParent
     {
+        IContainer IParent.Items => Items;
+        public Container<Rack> Items { get; }
+        
+        public ICommand AddNewRackCmd { get; }
+
         public Frame()
         {
             AddNewRackCmd = new Xamarin.Forms.Command(() => AddNewRack());
+            Items = new Container<Rack>(this);
         }
-
-        public ICommand AddNewRackCmd { get; }
 
         public void AddNewRack(bool before = false)
         {
@@ -20,7 +24,7 @@ namespace AuHost.Plugins
             var currentScene = document.CurrentScene;
             document.Launch(document);
 
-            var rackIndex = pluginGraph.SelectedRack?.Index + (before ? 0 : 1) ?? pluginGraph.Frame.Count;
+            var rackIndex = pluginGraph.SelectedRack?.Index + (before ? 0 : 1) ?? pluginGraph.Frame.Items.Count;
             var addRack = new AddRack(rackIndex);
             pluginGraph.CommandExecutor.Execute(addRack);
 

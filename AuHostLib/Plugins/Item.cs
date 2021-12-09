@@ -1,40 +1,143 @@
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using AuHost.Annotations;
 using Foundation;
 
 namespace AuHost.Plugins
 {
-    public abstract class Item<TParent> : NSObject, IItem<TParent> where TParent : class, IContainer
+    public abstract class Item<TParent> : NSObject, IItem<TParent>, INotifyPropertyChanged 
+        where TParent : class, IParent
     {
+        private int id;
+        private int index = -1;
+        private string name = "";
+        private TParent parent;
+
         protected Item(int id)
         {
             Id = id;
         }
 
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public TParent Parent { get; set; }
+        public int Id
+        {
+            get => id;
+            set
+            {
+                if (id == value)
+                    return;
+                id = value;
+                OnPropertyChanged();
+            }
+        }
 
-        protected IContainer Items { get; set; }
+        public int Index
+        {
+            get => index;
+            set
+            {
+                if (index == value)
+                    return;
+                index = value;
+                OnPropertyChanged();
+            }
+        }
 
-        IContainer IItem.Items => Items;
+        public string Name
+        {
+            get => name;
+            set
+            {
+                if (name == value)
+                    return;
+                name = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public int Index { get; set; } = -1;
-        public T GetNextSibling<T>() where T : class => Parent.GetItem<T>(Index + 1);
-        public T GetPreviousSibling<T>() where T : class => Parent.GetItem<T>(Index - 1);
+        public TParent Parent
+        {
+            get => parent;
+            set
+            {
+                if (parent == value)
+                    return;
+                parent = value;
+                OnPropertyChanged();
+            }
+        }
 
-        public void MoveTo(int newIndex) => Parent?.Move(this, newIndex);
+        public T GetNextSibling<T>() where T : class => Parent.Items.GetItem<T>(Index + 1);
+        public T GetPreviousSibling<T>() where T : class => Parent.Items.GetItem<T>(Index - 1);
+        public void MoveTo(int newIndex) => Parent?.Items.Move(this, newIndex);
 
-        public bool RemoveFromParent() => Parent?.Remove(this) ?? false;
-        IContainer IItem.Parent
+        public bool RemoveFromParent() => Parent?.Items.Remove(this) ?? false;
+        IParent IItem.Parent
         {
             get => Parent;
             set => Parent = value as TParent;
         }
         
-        public T GetParent<T>() where T : class, IContainer
+        public T GetParent<T>() where T : class, IParent
         {
             return Parent as T ?? (Parent as IItem)?.GetParent<T>();
         }
 
+        public IItem GetPreviousDeep()
+        {
+            if (Parent == null)
+                return Items.GetLastItem();
+
+            var item = GetPreviousSibling<IItem>();
+            if (item == null)
+                return Parent as IItem;
+
+            while (item?.Items.HasItems() == false)
+                item = item.Items.GetLastItem();
+
+            return item;
+        }
+
+        public IItem GetNextDeep()
+        {
+            var item = Items.GetFirstItem();
+            if (item != null) 
+                return item;
+            
+            item = this;
+            while (item?.Parent != null)
+            {
+                var nextSibling = item.GetNextSibling<IItem>();
+                if (nextSibling != null)
+                    return nextSibling;
+
+                item = item.Parent as Item<IItem, TParent>;
+            }
+
+            return item;
+        }        
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public IContainer Items { get; protected set; }
     }
+    
+    public abstract class Item<TSubItem, TParent> : Item<TParent>
+        where TSubItem : class, IItem
+        where TParent : class, IParent
+    {
+        public new Container<TSubItem> Items => base.Items as Container<TSubItem>;
+
+        protected Item() : base(Cache.Instance.GetNextId())
+        {
+            base.Items = new Container<TSubItem>(this);
+        }
+    }
+
 }
     

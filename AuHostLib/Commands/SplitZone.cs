@@ -54,7 +54,7 @@ namespace AuHost.Commands
             newZone = addZone.NewZone;
             newZone.SetSplitNote(SplitNote);
 
-            zone.Move(StripIndex, newZone);
+            zone.Items.Move(StripIndex, newZone.Items);
 
             if (StripIndex == 0)
                 Push(new AddStrip(zone, StripIndex, StripType.Instrument));

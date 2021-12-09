@@ -32,7 +32,7 @@ namespace AuHost.Commands
 
         public override bool Undo()
         {
-            strip.Remove(plugin);
+            strip.Items.Remove(plugin);
 
             return base.Undo();
         }

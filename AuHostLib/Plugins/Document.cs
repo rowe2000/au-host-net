@@ -49,7 +49,7 @@ namespace AuHost.Plugins
         
         public Scene GetInitialScene()
         {
-            return GetItem<Scene>(CurrentSceneId) ?? this;
+            return Items.GetItem<Scene>(CurrentSceneId) ?? this;
         }
 
         public int CurrentSceneId { get; set; }

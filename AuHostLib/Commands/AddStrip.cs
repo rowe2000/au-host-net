@@ -30,12 +30,12 @@ namespace AuHost.Commands
 
             strip = Cache.Instance.Create<Strip>();
             StripId = strip.Id;
-            zone.Insert(strip, StripIndex);
+            zone.Items.Insert(StripIndex, strip);
 
             Push(new SelectStrip(strip));
 
             Push(new AddPlugin(strip, InternalPluginFormat.MidiInDesc, 0));
-            Push(new AddPlugin(strip, InternalPluginFormat.AudioOutDesc, strip.Count));
+            Push(new AddPlugin(strip, InternalPluginFormat.AudioOutDesc, strip.Items.Count));
 
             return base.Execute();
         }

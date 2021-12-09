@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:viewModels="clr-namespace:AuHost.ViewModels;assembly=AuHostLib"
-             x:Class="AuHost.Views.RackView" x:DataType="viewModels:MainPageViewModel">
+             xmlns:plugins="clr-namespace:AuHost.Plugins;assembly=AuHostLib"
+             x:Class="AuHost.Views.RackView" x:DataType="plugins:Rack">
 <ContentView.BindingContext>
-    <viewModels:MainPageViewModel />
+    <plugins:Rack/>
 </ContentView.BindingContext>
     <ContentView.Content>
         <StackLayout Orientation="Vertical">
             <Picker x:Name="MidiInPicker" ItemsSource="{Binding MidiInputs}" ItemDisplayBinding="{Binding PortName}"/>
-            <StackLayout x:Name="ZoneStack" Orientation="Vertical" BindingContext="" />
+            <StackLayout x:Name="ZoneStack" Orientation="Vertical" BindingContext="{Binding .}" />
         </StackLayout>
     </ContentView.Content>
 </ContentView>

@@ -26,7 +26,7 @@ namespace AuHost.Commands
 
         public override bool Undo()
         {
-            rack.Insert(zone, zoneIndex);
+            rack.Items.Insert(zoneIndex, zone);
             zone = null;
 
             return base.Undo();

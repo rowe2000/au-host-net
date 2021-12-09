@@ -25,7 +25,7 @@ namespace AuHost.Commands
 
         public override bool Undo()
         {
-            zone.Insert(strip, stripIndex);
+            zone.Items.Insert(stripIndex, strip);
             strip = null;
 
             return base.Undo();

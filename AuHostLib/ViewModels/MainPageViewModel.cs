@@ -83,14 +83,15 @@ namespace AuHost.ViewModels
 
         private void AddNewRack()
         {
-            var currentScene = PluginGraph.Document.CurrentScene;
-            PluginGraph.Document.Launch(PluginGraph.Document);
+            var doc = PluginGraph.Document;
+            var currentScene = doc.CurrentScene;
+            doc.Launch(doc);
 
-            var rackIndex = SelectedRack?.Index ?? PluginGraph.Frame.Count;
+            var rackIndex = SelectedRack?.Index ?? PluginGraph.Frame.Items.Count;
             var addRack = new AddRack(rackIndex);
             PluginGraph.CommandExecutor.Execute(addRack);
 
-            PluginGraph.Document.Launch(currentScene);
+            doc.Launch(currentScene);
 
             AddNewZone(addRack.NewRack);
         }
@@ -98,7 +99,7 @@ namespace AuHost.ViewModels
         private void AddNewZone(Rack rack)
         {
             rack = rack ?? SelectedRack;
-            var zoneIndex = SelectedZone?.Index + (false ? 0 : 1) ?? rack.Count;
+            var zoneIndex = SelectedZone?.Index + (false ? 0 : 1) ?? rack.Items.Count;
             var addZone = new AddZone(rack, zoneIndex);
             PluginGraph.CommandExecutor.Execute(addZone);
 
@@ -107,7 +108,7 @@ namespace AuHost.ViewModels
 
         private void AddNewStrip(Zone zone)
         {
-            var stripIndex = zone.Count;
+            var stripIndex = zone.Items.Count;
             PluginGraph.CommandExecutor.Execute(new AddStrip(zone, stripIndex, StripType.Instrument));
         }
 

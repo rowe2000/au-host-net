@@ -34,7 +34,7 @@ namespace AuHost.Plugins
             }
             
             PluginGraph.Instance.Register(this);
-            strip.Insert(this, Index);
+            strip.Items.Insert(Index, this);
         }
     
         public IEnumerable<Connection> GetConnections()

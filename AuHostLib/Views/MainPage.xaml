@@ -2,40 +2,58 @@
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:viewModels="clr-namespace:AuHost.ViewModels;assembly=AuHostLib"
-             xmlns:views="clr-namespace:AuHost.Views;assembly=AuHostLib"
+             xmlns:plugins="clr-namespace:AuHost.Plugins;assembly=AuHostLib"
              x:Class="AuHost.Views.MainPage" x:DataType="viewModels:MainPageViewModel">
     <ContentPage.BindingContext>
         <viewModels:MainPageViewModel />
     </ContentPage.BindingContext>
         <StackLayout Orientation="Horizontal">
         
-        <!-- AudioUnits -->
-        <ListView HorizontalOptions="Start" WidthRequest="300" 
-            BackgroundColor="Transparent"
-            GroupDisplayBinding="{Binding Key}"
-            ItemsSource="{Binding AudioComponents}"
-            SelectedItem="{Binding SelectedAudioComponent}"
-            SelectionMode="Single">
-            <ListView.Header>
-                <StackLayout>
-                    <Label Text="Plugins" />
+            <!-- AudioUnits -->
+            <ListView HorizontalOptions="Start" WidthRequest="300" 
+                BackgroundColor="Transparent"
+                GroupDisplayBinding="{Binding Key}"
+                ItemsSource="{Binding AudioComponents}"
+                SelectedItem="{Binding SelectedAudioComponent}"
+                SelectionMode="Single">
+
+                <ListView.Header>
+                    <StackLayout>
+                        <Label Text="Plugins" />
+                    </StackLayout>
+                </ListView.Header>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <ViewCell> 
+                            <ViewCell.ContextActions>
+                                <MenuItem Text="Launch"></MenuItem>
+                                <MenuItem Text="Favorite"></MenuItem>
+                                <MenuItem Text="Disable" IsDestructive="True"></MenuItem>
+                            </ViewCell.ContextActions>
+                            <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Text="{Binding .Name}"></Label>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+                
+            </ListView>
+
+                <StackLayout Orientation="Vertical">
+
+                <StackLayout BindableLayout.ItemsSource="{Binding .PluginGraph.Frame.Items}">
+                    <BindableLayout.ItemTemplate>
+                        <DataTemplate>
+                            <StackLayout>
+                                <Label Text="Rack" />
+                                <Label Text="{Binding .Index}" />
+                            </StackLayout>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
                 </StackLayout>
-            </ListView.Header>
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <ViewCell> 
-                        <ViewCell.ContextActions>
-                            <MenuItem Text="Launch"></MenuItem>
-                            <MenuItem Text="Favorite"></MenuItem>
-                            <MenuItem Text="Disable" IsDestructive="True"></MenuItem>
-                        </ViewCell.ContextActions>
-                        <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Text="{Binding .Name}"></Label>
-                    </ViewCell>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
 
-        <views:FrameView />
-
+                <StackLayout Orientation="Horizontal">
+                    <Button Text="Add rack" Command="{Binding .AddNewRackCmd}"/>
+                </StackLayout>
+            </StackLayout>
         </StackLayout>
 </ContentPage>

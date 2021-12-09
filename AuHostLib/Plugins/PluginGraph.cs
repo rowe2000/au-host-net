@@ -166,7 +166,7 @@ namespace AuHost.Plugins
             Document.Launch(null);
             Document.Dispose();
             
-            Frame.Clear();
+            Frame.Items.Clear();
 
             Document = doc;
             Document.Launch(Document.GetInitialScene());

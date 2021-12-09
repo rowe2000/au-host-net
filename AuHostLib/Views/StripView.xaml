@@ -7,7 +7,7 @@
             <Label Text="PLUGINS" />
             <StackLayout x:Name="PluginStack" Orientation="Horizontal">
             </StackLayout>
-            <Button Text="Add plugin" Clicked="OnAddPluginClicked"></Button>
+            <Button Text="Add plugin"></Button>
         </StackLayout>
     </ContentView.Content>
 </ContentView>

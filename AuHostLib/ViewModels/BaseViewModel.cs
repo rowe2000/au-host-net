@@ -17,9 +17,9 @@ namespace AuHost.ViewModels
             }
         }
 
-        private ObservableRangeCollection<TSubItem> items;
         private TItem item;
 
+        private ObservableRangeCollection<TSubItem> items;
         public ObservableRangeCollection<TSubItem> Items
         {
             get => items;

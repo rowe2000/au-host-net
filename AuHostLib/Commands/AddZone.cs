@@ -24,7 +24,7 @@ namespace AuHost.Commands
             NewZone = Cache.Instance.Create<Zone>();
             ZoneId = NewZone.Id;
             
-            rack.Insert(NewZone, ZoneIndex);
+            rack.Items.Insert(ZoneIndex, NewZone);
 
             Push(new SelectZone(NewZone));
 

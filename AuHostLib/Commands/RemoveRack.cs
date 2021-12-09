@@ -6,7 +6,7 @@ namespace AuHost.Commands
     {
         private Rack rack;
         private int rackIndex;
-        private IContainer frame;
+        private Frame frame;
 
         public override bool SaveInScene => true;
         public int RackId { get; set; }
@@ -18,14 +18,14 @@ namespace AuHost.Commands
             rack = Cache.Instance.GetItem<Rack>(RackId);
             rackIndex = rack.Index;
             frame = rack.Parent;
-            frame.Remove(rack);
+            frame.Items.Remove(rack);
 
             return base.Execute();
         }
 
         public override bool Undo()
         {
-            frame.Insert(rack, rackIndex);
+            frame.Items.Insert(rackIndex, rack);
             rack = null;
          
             return base.Undo();

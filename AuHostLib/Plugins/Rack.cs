@@ -3,7 +3,7 @@ using AuHost.Commands;
 
 namespace AuHost.Plugins
 {
-    public class Rack : Slotable<Zone, Frame>, IPresetable
+    public class Rack : Slotable<Zone, Frame>, IPresetable, IParent
     {
         public ICommand AddZoneCmd { get; }
 
@@ -24,7 +24,7 @@ namespace AuHost.Plugins
 
         public void AddNewZone(bool before = false)
         {
-            var zoneIndex = PluginGraph.Instance.SelectedZone?.Index + (before ? 0 : 1) ?? Count;
+            var zoneIndex = PluginGraph.Instance.SelectedZone?.Index + (before ? 0 : 1) ?? Items.Count;
             var addZone = new AddZone(this, zoneIndex);
             PluginGraph.Instance.CommandExecutor.Execute(addZone);
 

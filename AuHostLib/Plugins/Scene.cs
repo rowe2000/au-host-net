@@ -14,7 +14,7 @@ namespace AuHost.Plugins
         public string  Key { get; set; }
         public int Transpose { get; set; }
 
-        public List<Scene> GetPath() => GetPath<Scene>();
+        public List<Scene> GetPath() => Items.GetPath<Scene>();
 
         public void Launch()
         {
@@ -50,7 +50,7 @@ namespace AuHost.Plugins
                     scene.Key = text;
             }
 
-            Insert(scene, index);
+            Items.Insert(index, scene);
 
             return scene;        }
 

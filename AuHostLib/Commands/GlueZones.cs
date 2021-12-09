@@ -16,7 +16,7 @@ namespace AuHost.Commands
 
                 var glueZone = zone.GetPreviousSibling<Zone>();
 
-                zone.Move(0, glueZone);
+                zone.Items.Move(0, glueZone.Items);
 
                 Push(new RemoveZone(zone));
 

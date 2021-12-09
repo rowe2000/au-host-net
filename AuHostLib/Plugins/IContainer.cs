@@ -10,15 +10,15 @@ namespace AuHost.Plugins
         T GetItem<T>(int index) where T : class;
 
         bool Remove(IItem item);
-        List<T> GetPath<T>() where T : class, IContainer;
+        List<T> GetPath<T>() where T : class, IParent;
         int DeepCount<T>();
         T GetItemDeep<T>(int id) where T : class;
         bool HasItems();
-        ICacheable GetLastItem();
-        ICacheable GetFirstItem();
+        IItem GetLastItem();
+        IItem GetFirstItem();
         void Add(IItem item);
         
-        void Insert(IItem item, int index);
+        void Insert(int index, IItem item);
 
         void Move(IItem item, int index);
 
