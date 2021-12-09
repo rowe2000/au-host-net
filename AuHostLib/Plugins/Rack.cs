@@ -3,7 +3,7 @@ using AuHost.Commands;
 
 namespace AuHost.Plugins
 {
-    public class Rack : Slotable<Zone, Frame>, IPresetable, IParent
+    public class Rack : Slotable<Zone, Frame>, IPresetable
     {
         public ICommand AddZoneCmd { get; }
 

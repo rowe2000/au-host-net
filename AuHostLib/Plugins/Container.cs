@@ -159,7 +159,7 @@ namespace AuHost.Plugins
 
         public void AddItems(IEnumerable addItems) => AddRange(addItems.OfType<TItem>());
 
-        public event PropertyChangedEventHandler PropertyChanged;
+        protected override event PropertyChangedEventHandler PropertyChanged;
 
         [NotifyPropertyChangedInvocator]
         private void OnPropertyChanged([CallerMemberName] string propertyName = null)
