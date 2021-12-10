@@ -10,7 +10,7 @@ namespace AuHost.Models
     public abstract class Item<TParent> : NSObject, IItem<TParent>, INotifyPropertyChanged 
         where TParent : class, IParent
     {
-        private int id;
+        private int id = -1;
         private int index = -1;
         private string name = "";
         private TParent parent;

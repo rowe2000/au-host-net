@@ -10,10 +10,12 @@ namespace AuHost.Models
         public Container<Rack> Items { get; }
         
         public ICommand AddNewRackCmd { get; }
+        public ICommand AddMidiPropCmd { get; }
 
         public Frame()
         {
             AddNewRackCmd = new Xamarin.Forms.Command(() => AddNewRack());
+            AddMidiPropCmd = new Xamarin.Forms.Command(() => {});
             Items = new Container<Rack>(this);
         }
 

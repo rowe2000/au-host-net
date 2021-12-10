@@ -13,6 +13,8 @@ namespace AuHost.Models
             get { throw new System.NotImplementedException(); }
         }
 
+        public ICommand AddMidiPropCmd { get; }
+
         public Preset GetOrCreatePreset()
         {
             return Preset;
@@ -21,6 +23,7 @@ namespace AuHost.Models
         public Rack()
         {
             AddZoneCmd = new Xamarin.Forms.Command(() => AddNewZone());
+            AddMidiPropCmd = new Xamarin.Forms.Command(() => {});
         }
 
         public void AddNewZone(bool before = false)

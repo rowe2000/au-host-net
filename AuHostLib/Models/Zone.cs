@@ -6,6 +6,12 @@ namespace AuHost.Models
 {
     public class Zone : Slotable<Strip, Rack>, IPresetable
     {
+        public Zone()
+        {
+            AddStripCmd = new Xamarin.Forms.Command(OnAddNewStrip);
+            AddMidiPropCmd = new Xamarin.Forms.Command(() => { });
+        }
+
         public Preset GetOrCreatePreset()
         {
             return Preset;
@@ -13,7 +19,10 @@ namespace AuHost.Models
 
         public Interval<int> SplitRange { get; }
 
-        public ICommand AddNewStrip => new Xamarin.Forms.Command(OnAddNewStrip);
+        public ICommand AddStripCmd { get; }
+
+        public ICommand AddMidiPropCmd { get; }
+        
 
         public void OnAddNewStrip()
         {
