@@ -1,7 +1,8 @@
 using System.Windows.Input;
+using AuHost.Plugins;
 using Xamarin.Forms;
 
-namespace AuHost.Plugins
+namespace AuHost.Models
 {
     public class Strip : Slotable<Plugin, Zone>, IPresetable
     {

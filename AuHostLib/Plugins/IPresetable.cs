@@ -1,3 +1,5 @@
+using AuHost.Models;
+
 namespace AuHost.Plugins
 {
     public interface IPresetable

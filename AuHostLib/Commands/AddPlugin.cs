@@ -1,3 +1,4 @@
+using AuHost.Models;
 using AuHost.Plugins;
 
 namespace AuHost.Commands
@@ -21,9 +22,8 @@ namespace AuHost.Commands
         
         public override bool Execute()
         {
-            var pluginGraph = PluginGraph.Instance;
             strip = Cache.Instance.GetItem<Strip>(StripId);
-            plugin = new Plugin(PluginName);
+            plugin = Cache.Instance.Create<Plugin>(PluginName);
             plugin.Index = PluginIndex;
             plugin.Activate(strip);
 

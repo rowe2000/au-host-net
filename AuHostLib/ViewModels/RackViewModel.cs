@@ -1,4 +1,5 @@
 using System.Windows.Input;
+using AuHost.Models;
 using AuHost.Plugins;
 using CoreMidi;
 using Xamarin.CommunityToolkit.ObjectModel;

@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace AuHost.Plugins
 {
-    public interface IContainer : INotifyCollectionChanged, INotifyPropertyChanged, IEnumerable 
+    public interface IContainer : INotifyCollectionChanged, INotifyPropertyChanged, IList
     {
         T GetItem<T>(int index) where T : class;
 
@@ -25,8 +25,6 @@ namespace AuHost.Plugins
         void AddItems(IEnumerable addItems);
         void Move(int fromIndex, IContainer newOwner);
 
-        void Clear();
-        int Count { get; }
         void Move(int index, int newIndex);
         void FixIndices();
     }

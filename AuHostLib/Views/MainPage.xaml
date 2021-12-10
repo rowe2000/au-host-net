@@ -31,7 +31,7 @@
                                 <MenuItem Text="Favorite"></MenuItem>
                                 <MenuItem Text="Disable" IsDestructive="True"></MenuItem>
                             </ViewCell.ContextActions>
-                            <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Text="{Binding .Name}"></Label>
+                            <Label VerticalTextAlignment="Center" HorizontalTextAlignment="Start" Text="asd"></Label>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
@@ -45,7 +45,6 @@
                         <DataTemplate>
                             <StackLayout>
                                 <Label Text="Rack" />
-                                <Label Text="{Binding .Index}" />
                             </StackLayout>
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>

@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AuHost.Models;
 using AuHost.Plugins;
 
 namespace AuHost.Commands

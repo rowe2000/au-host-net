@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Windows.Input;
+using AuHost.Plugins;
 using AVFoundation;
 
-namespace AuHost.Plugins
+namespace AuHost.Models
 {
     public class Plugin : Slotable<IItem, Strip>, IPresetable
     {

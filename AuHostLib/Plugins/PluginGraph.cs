@@ -2,6 +2,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using AuHost.Models;
 using AVFoundation;
 
 namespace AuHost.Plugins
@@ -17,7 +18,7 @@ namespace AuHost.Plugins
         public CommandExecutor CommandExecutor { get; } = new CommandExecutor();
 
         public Frame Frame { get; } = new Frame();
-        public Document Document { get; set; }
+        public Document Document { get; private set; }
         public Rack SelectedRack { get; private set; }
         public Zone SelectedZone { get; private set; }
         public Strip SelectedStrip { get; private set; }
@@ -55,9 +56,7 @@ namespace AuHost.Plugins
         public PluginGraph()
         {
             AudioEngine.Reset();
-            Document = new Document();
-            Document.CurrentScene = Document;
-            CommandExecutor.SetDocument(Document);
+            LaunchDocument();
         }
 
         public void RemoveConnection(Plugin srcPlugin, int srcChannel, Plugin dstPlugin, int dstChannel)
@@ -161,17 +160,21 @@ namespace AuHost.Plugins
             return 0;
         }
 
-        public void LaunchDocument(Document doc)
+        public void LaunchDocument(Document document = null)
         {
-            Document.Launch(null);
-            Document.Dispose();
+            Document?.Launch(null);
+            Document?.Dispose();
             
             Frame.Items.Clear();
 
-            Document = doc;
-            Document.Launch(Document.GetInitialScene());
-            CommandExecutor.SetDocument(doc);
+            if (document == null)
+                document = new Document();
+            
+            CommandExecutor.SetDocument(document);
+            Cache.Setup(document);
+            document.Launch(document.GetInitialScene());
+            
+            Document = document;
         }
-
     }
 }

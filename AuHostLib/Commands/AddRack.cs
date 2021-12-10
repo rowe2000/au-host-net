@@ -1,3 +1,4 @@
+using AuHost.Models;
 using AuHost.Plugins;
 
 namespace AuHost.Commands
@@ -12,14 +13,14 @@ namespace AuHost.Commands
         public AddRack(int rackIndex)
         {
             RackIndex = rackIndex;
+            RackId = Cache.Instance.GetNextId();
         }
 
         public override bool Execute()
         {
             var pluginGraph = PluginGraph.Instance;
             
-            NewRack = Cache.Instance.Create<Rack>();
-            RackId = NewRack.Id;
+            NewRack = Cache.Instance.CreateWithId<Rack>(RackId);
             pluginGraph.Frame.Items.Insert(RackIndex, NewRack);
 
             Push(new SelectRack(NewRack));

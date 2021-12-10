@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using AuHost.Annotations;
 using AuHost.Commands;
+using AuHost.Models;
 using AuHost.Plugins;
 using CoreMidi;
 using Foundation;
@@ -77,7 +78,7 @@ namespace AuHost.ViewModels
 
         public void NewDocument()
         {
-            PluginGraph.LaunchDocument(new Document { Name = "New document" });
+            PluginGraph.LaunchDocument();
             AddNewRack();
         }
 

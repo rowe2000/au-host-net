@@ -2,9 +2,10 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:plugins="clr-namespace:AuHost.Plugins;assembly=AuHostLib"
-             x:Class="AuHost.Views.RackView" x:DataType="plugins:Rack">
+             xmlns:models="clr-namespace:AuHost.Models;assembly=AuHostLib"
+             x:Class="AuHost.Views.RackView" x:DataType="models:Rack">
 <ContentView.BindingContext>
-    <plugins:Rack/>
+    <models:Rack/>
 </ContentView.BindingContext>
     <ContentView.Content>
         <StackLayout Orientation="Vertical">

@@ -1,7 +1,8 @@
 using System.Windows.Input;
 using AuHost.Commands;
+using AuHost.Plugins;
 
-namespace AuHost.Plugins
+namespace AuHost.Models
 {
     public class Frame : IParent
     {

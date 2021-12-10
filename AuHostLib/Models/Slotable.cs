@@ -1,4 +1,6 @@
-namespace AuHost.Plugins
+using AuHost.Plugins;
+
+namespace AuHost.Models
 {
     public abstract class Slotable<TChild, TParent> : Item<TChild, TParent>
         where TParent : class, IParent

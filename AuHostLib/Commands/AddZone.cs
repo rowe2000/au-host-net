@@ -1,3 +1,4 @@
+using AuHost.Models;
 using AuHost.Plugins;
 
 namespace AuHost.Commands
@@ -16,13 +17,13 @@ namespace AuHost.Commands
         {
             RackId = rack.Id;
             ZoneIndex = zoneIndex;
+            ZoneId = Cache.Instance.GetNextId();
         }
 
         public override bool Execute()
         {
             var rack = Cache.Instance.GetItem<Rack>(RackId);
-            NewZone = Cache.Instance.Create<Zone>();
-            ZoneId = NewZone.Id;
+            NewZone = Cache.Instance.CreateWithId<Zone>(ZoneId);
             
             rack.Items.Insert(ZoneIndex, NewZone);
 

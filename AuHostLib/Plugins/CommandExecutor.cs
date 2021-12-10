@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AuHost.Commands;
+using AuHost.Models;
 
 namespace AuHost.Plugins
 {

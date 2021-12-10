@@ -1,3 +1,4 @@
+using AuHost.Models;
 using AuHost.Plugins;
 
 namespace AuHost.Commands
@@ -28,8 +29,7 @@ namespace AuHost.Commands
             if (zone == null)
                 return false;
 
-            strip = Cache.Instance.Create<Strip>();
-            StripId = strip.Id;
+            strip = Cache.Instance.CreateWithId<Strip>(StripId);
             zone.Items.Insert(StripIndex, strip);
 
             Push(new SelectStrip(strip));

@@ -1,9 +1,11 @@
+using System;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using AuHost.Annotations;
+using AuHost.Plugins;
 using Foundation;
 
-namespace AuHost.Plugins
+namespace AuHost.Models
 {
     public abstract class Item<TParent> : NSObject, IItem<TParent>, INotifyPropertyChanged 
         where TParent : class, IParent
@@ -13,23 +15,22 @@ namespace AuHost.Plugins
         private string name = "";
         private TParent parent;
 
-        protected Item(int id)
-        {
-            Id = id;
-        }
-
         public int Id
         {
             get => id;
             set
             {
+                if (id >= 0) 
+                    throw new Exception($"Id is already set for {GetType().Name}");
+                
                 if (id == value)
                     return;
+                
                 id = value;
                 OnPropertyChanged();
             }
         }
-
+        
         public int Index
         {
             get => index;
@@ -124,7 +125,14 @@ namespace AuHost.Plugins
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public IContainer Items { get; protected set; }
+        public Plugins.IContainer Items { get; protected set; }
+        
+        public static void SetId(IItem instance, int id)
+        {
+            instance.Id = id;
+        }
+
+
     }
     
     public abstract class Item<TSubItem, TParent> : Item<TParent>
@@ -133,11 +141,10 @@ namespace AuHost.Plugins
     {
         public new Container<TSubItem> Items => base.Items as Container<TSubItem>;
 
-        protected Item() : base(Cache.Instance.GetNextId())
+        protected Item()
         {
             base.Items = new Container<TSubItem>(this);
         }
     }
-
 }
     

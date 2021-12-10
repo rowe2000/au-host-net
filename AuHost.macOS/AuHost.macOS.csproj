@@ -78,7 +78,9 @@
       <HintPath>..\packages\Xamarin.Forms.5.0.0.2244\lib\Xamarin.Mac\Xamarin.Forms.Xaml.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Xamarin.Mac" />
+    <Reference Include="Xamarin.Mac, Version=0.0.0.0, Culture=neutral, PublicKeyToken=84e04ff9cfb79065">
+      <HintPath>..\..\..\.nuget\packages\xamarin.mac.digitalhigh\8.2.0.1\lib\Xamarin.Mac.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ImageAsset Include="Assets.xcassets\AppIcon.appiconset\Contents.json" />

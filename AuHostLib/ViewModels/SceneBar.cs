@@ -1,3 +1,4 @@
+using AuHost.Models;
 using AuHost.Plugins;
 
 namespace AuHost.ViewModels

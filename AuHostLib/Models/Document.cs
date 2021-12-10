@@ -1,16 +1,25 @@
 using System;
 using System.Collections.Generic;
+using AuHost.Plugins;
 
-namespace AuHost.Plugins
+namespace AuHost.Models
 {
     public sealed class Document : Scene
     {
+        private static int docCount;
+
+        public int MaxId { get; set; }
+        public int CurrentSceneId { get; set; }
+
         public PresetLibrary PresetLibrary { get; } = new PresetLibrary();
+        public Scene CurrentScene { get; set; }
 
         public event Action<SceneChangeArgument> SceneChanged;
-        public int MaxId { get; set; }
 
-        public Scene CurrentScene { get; set; }
+        public Document()
+        {
+            Name = "New GigRig " + ++docCount;
+        }
 
         public void Launch(Scene newScene)
         {
@@ -51,9 +60,7 @@ namespace AuHost.Plugins
         {
             return Items.GetItem<Scene>(CurrentSceneId) ?? this;
         }
-
-        public int CurrentSceneId { get; set; }
-
+        
         private void OnSceneChanged(SceneChangeArgument obj)
         {
             SceneChanged?.Invoke(obj);

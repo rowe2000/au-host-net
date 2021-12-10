@@ -2,10 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using AuHost.Annotations;
 using Xamarin.CommunityToolkit.ObjectModel;
 
 namespace AuHost.Plugins
@@ -31,12 +28,7 @@ namespace AuHost.Plugins
                     item.Parent = null;
                 }
 
-            var index = 0;
-            foreach (var item in this)
-            {
-                item.Id = index++;
-                item.Parent = owner;
-            }
+            FixIndices();
         }
 
         public T GetItemDeep<T>(int id) where T : class
@@ -46,10 +38,7 @@ namespace AuHost.Plugins
                 if (item.Id == id)
                     return item as T;
 
-                if (!(item is IContainer container)) 
-                    continue;
-                
-                var foundItem = container.GetItemDeep<T>(id);
+                var foundItem = item.Items.GetItemDeep<T>(id);
                 if (foundItem != null)
                     return foundItem;
             }
@@ -73,7 +62,7 @@ namespace AuHost.Plugins
             return path;
         }
 
-        public int DeepCount<T>() => Count + this.Sum(item => (item as IContainer)?.DeepCount<T>()) ?? 0;
+        public int DeepCount<T>() => Count + this.Sum(item => item?.Items.DeepCount<T>()) ?? 0;
 
         public void InsertRange(int index, IEnumerable<TItem> insertItems)
         {
@@ -115,8 +104,11 @@ namespace AuHost.Plugins
 
         public void FixIndices()
         {
-            for (var i = 0; i < Count; i++) 
+            for (var i = 0; i < Count; i++)
+            {
                 base[i].Index = i;
+                base[i].Parent = owner;
+            }
         }
 
         public void Move(int fromIndex, IContainer newOwner)
@@ -158,13 +150,5 @@ namespace AuHost.Plugins
         }
 
         public void AddItems(IEnumerable addItems) => AddRange(addItems.OfType<TItem>());
-
-        protected override event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
     }
 }

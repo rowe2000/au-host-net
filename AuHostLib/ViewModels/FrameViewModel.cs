@@ -1,7 +1,8 @@
 using System.Windows.Input;
+using AuHost.Models;
 using AuHost.Plugins;
 using Xamarin.Forms;
-using Frame = AuHost.Plugins.Frame;
+using Frame = AuHost.Models.Frame;
 
 namespace AuHost.ViewModels
 {

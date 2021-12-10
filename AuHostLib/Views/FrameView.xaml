@@ -2,10 +2,11 @@
 <ContentView xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:plugins="clr-namespace:AuHost.Plugins;assembly=AuHostLib"
-             x:Class="AuHost.Views.FrameView" x:DataType="plugins:Frame">
+             xmlns:models="clr-namespace:AuHost.Models;assembly=AuHostLib"
+             x:Class="AuHost.Views.FrameView" x:DataType="models:Frame">
     
     <ContentView.BindingContext>
-        <plugins:Frame/>
+        <models:Frame/>
     </ContentView.BindingContext>
     
     <ContentView.Content>
@@ -13,7 +14,7 @@
             <StackLayout Orientation="Vertical">
                 <StackLayout x:Name="RackStack" BindableLayout.ItemsSource="{Binding .Items}">
                     <BindableLayout.ItemTemplate>
-                        <DataTemplate x:DataType="plugins:Rack">
+                        <DataTemplate x:DataType="models:Rack">
                             <Label Text="{Binding .Index}" />
                         </DataTemplate>
                     </BindableLayout.ItemTemplate>
