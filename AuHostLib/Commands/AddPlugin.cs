@@ -5,7 +5,6 @@ namespace AuHost.Commands
 {
     public class AddPlugin : Command
     {
-        private Plugin plugin;
         private Strip strip;
 
         public override bool SaveInScene => true;
@@ -13,26 +12,28 @@ namespace AuHost.Commands
         public string PluginName { get; set; }
         public int StripId { get; set; }
 
-        public AddPlugin(Strip strip, InternalPluginFormat midiInDesc, int pluginIndex)
+        public Plugin Plugin { get; private set; }
+
+        public AddPlugin(Strip strip, string pluginName, int pluginIndex)
         {
             StripId = strip.Id;
+            PluginName = pluginName;
             PluginIndex = pluginIndex;
         }
 
-        
         public override bool Execute()
         {
             strip = Cache.Instance.GetItem<Strip>(StripId);
-            plugin = Cache.Instance.Create<Plugin>(PluginName);
-            plugin.Index = PluginIndex;
-            plugin.Activate(strip);
+            Plugin = Cache.Instance.Create<Plugin>(PluginName);
+            Plugin.Index = PluginIndex;
+            Plugin.Activate(strip);
 
             return base.Execute();
         }
 
         public override bool Undo()
         {
-            strip.Items.Remove(plugin);
+            strip.Items.Remove(Plugin);
 
             return base.Undo();
         }

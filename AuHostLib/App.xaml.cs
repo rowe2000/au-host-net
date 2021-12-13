@@ -15,7 +15,7 @@ namespace AuHost
 
         protected override void OnStart()
         {
-            PluginGraph.Instance.Load();
+//            PluginGraph.Instance.Load();
         }
 
         protected override void OnSleep()

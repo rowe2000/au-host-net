@@ -17,7 +17,7 @@ namespace AuHost.Plugins
 
         private readonly Dictionary<string, AVAudioUnitComponent> components;
 
-        public readonly ObservableRangeCollection<AuHost.ViewModels.AudioComponent> ViewModelAudioComponents;
+        public readonly ObservableRangeCollection<ViewModels.AudioComponentModel> AudioComponentModels;
         
         public AudioUnitManager()
         {
@@ -35,8 +35,8 @@ namespace AuHost.Plugins
                 .GetComponents(anyMusicDevice)
                 .ToDictionary(o => o.Name, o => o);
 
-            var viewAudioComponents = components.Select(o => new AuHost.ViewModels.AudioComponent { Name = o.Value.Name, Manufacture = o.Value.ManufacturerName });
-            ViewModelAudioComponents = new ObservableRangeCollection<AuHost.ViewModels.AudioComponent>(viewAudioComponents);
+            var viewAudioComponents = components.Select(o => new ViewModels.AudioComponentModel { AudioUnitComponent = o.Value});
+            AudioComponentModels = new ObservableRangeCollection<ViewModels.AudioComponentModel>(viewAudioComponents);
 
             foreach(var g in components.Values.GroupBy(o => o.ManufacturerName))
             {

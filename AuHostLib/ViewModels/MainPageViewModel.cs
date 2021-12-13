@@ -19,18 +19,18 @@ namespace AuHost.ViewModels
     public sealed class MainPageViewModel : INotifyPropertyChanged, INotifyCollectionChanged
     {
         public PluginGraph PluginGraph { get; }
-        public ObservableRangeCollection<AudioComponent> AudioComponents { get; } 
+        public ObservableRangeCollection<AudioComponentModel> AudioComponentModels { get; } 
 
-        public ObservableRangeCollection<Grouping<string, AudioComponent>> Manufactures { get; }
+        public ObservableRangeCollection<Grouping<string, AudioComponentModel>> Manufactures { get; }
 
         public MainPageViewModel()
         {
             PluginGraph = PluginGraph.Instance;
-            AudioComponents = PluginGraph.AudioUnitManager.ViewModelAudioComponents;
-            Manufactures = new ObservableRangeCollection<Grouping<string, AudioComponent>>(
-                AudioComponents
+            AudioComponentModels = PluginGraph.AudioUnitManager.AudioComponentModels;
+            Manufactures = new ObservableRangeCollection<Grouping<string, AudioComponentModel>>(
+                AudioComponentModels
                     .GroupBy(o => o.Manufacture)
-                    .Select(o => new Grouping<string, AudioComponent>(o.Key, o.ToArray())));
+                    .Select(o => new Grouping<string, AudioComponentModel>(o.Key, o.ToArray())));
             
             AddNewRackCmd = new Xamarin.Forms.Command(AddNewRack);
             AddNewZoneCmd = new Command<Rack>(AddNewZone);
@@ -48,7 +48,7 @@ namespace AuHost.ViewModels
 
         public SceneBar SceneBar { get; } = new SceneBar();
         public ToolBar ToolBar { get; } = new ToolBar();
-        public AudioComponent SelectedAudioComponent { get; set; }
+        public AudioComponentModel SelectedAudioComponentModel { get; set; }
 
         public ICommand AddNewRackCmd { get; }
         public Command<Rack> AddNewZoneCmd { get; }

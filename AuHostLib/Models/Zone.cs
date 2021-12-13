@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Input;
 using AuHost.Commands;
 using AuHost.Plugins;
@@ -43,6 +44,14 @@ namespace AuHost.Models
             previousZone.SplitRange.End = endNote;
             foreach(Strip item in previousZone.Items)
             	item.NoteTransform.zoneSplit = previousZone.SplitRange;
+        }
+
+        public void OnMidiMessageReceived(MidiMessage[] midiMessages)
+        {
+            foreach (var item in Items)
+            {
+                item.OnMidiMessageReceived(midiMessages);
+            }
         }
     }
 }

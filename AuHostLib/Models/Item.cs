@@ -144,6 +144,8 @@ namespace AuHost.Models
         protected Item()
         {
             base.Items = new Container<TSubItem>(this);
+            base.Items.CollectionChanged += (o, a) => GetParent<Frame>()?.FixStripNumbers();
+
         }
     }
 }

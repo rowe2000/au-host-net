@@ -2,7 +2,9 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading.Tasks;
+using AudioUnit;
 using AuHost.Models;
+using AuHost.ViewModels;
 using AVFoundation;
 
 namespace AuHost.Plugins
@@ -23,6 +25,7 @@ namespace AuHost.Plugins
         public Zone SelectedZone { get; private set; }
         public Strip SelectedStrip { get; private set; }
         public Plugin SelectedPlugin { get; private set; }
+        public AudioComponentModel SelectedComponent { get; set; }
 
         public void SelectRack(Rack rack)
         {
@@ -59,6 +62,14 @@ namespace AuHost.Plugins
             LaunchDocument();
         }
 
+        public void FixStripNumbers()
+        {
+            var number = 1;
+            foreach (var rack in Frame.Items)
+            foreach (var zone in rack.Items)
+            foreach (var strip in zone.Items)
+                strip.Number = number++;
+        }
         public void RemoveConnection(Plugin srcPlugin, int srcChannel, Plugin dstPlugin, int dstChannel)
         {
             if (srcChannel != 4096 && dstChannel != 4096)
@@ -121,7 +132,7 @@ namespace AuHost.Plugins
             
             var plugins = new[] {"Pianoteq 7", "M1", "Blue3"};
 
-            foreach (var task in plugins.Select(async name => await PluginGraph.Instance.Fetch(name, null)))
+            foreach (var task in plugins.Select(async name => await Instance.Fetch(name, null)))
             {
                 var av = await task;
                 av.AUAudioUnit.RequestViewController(view =>

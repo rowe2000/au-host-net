@@ -62,5 +62,14 @@ namespace AuHost.Models
         {
             Task.Run(async () => await BeginActivate(strip));
         }
+
+        public void OnMidiMessageReceived(MidiMessage[] midiMessages)
+        {
+            foreach (var midiMessage in midiMessages)
+            {
+                AVAudioUnit.AudioUnit.MusicDeviceMIDIEvent(midiMessage.StatusByte, midiMessage.Byte1, midiMessage.Byte2 ?? 0);
+                Console.WriteLine($@"{AVAudioUnit.Name}, {midiMessage}");
+            }
+        }
     }
 }

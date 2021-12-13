@@ -15,7 +15,9 @@ namespace AuHost
         private int length = 0;
         private AUMidiOutputEventBlock midiOutputEventBlock = null;
         private AUHostTransportStateBlock transportStateBlock = null;
+        
         //private AUHostMusicalContextBlock musicalContextBlock;
+        
         private readonly ConcurrentQueue<MidiMessage> packets = new ConcurrentQueue<MidiMessage>();
         private readonly MidiClient client;
 
@@ -23,6 +25,7 @@ namespace AuHost
         private readonly ConcurrentDictionary<string, (MidiEndpoint midiEndpoint, MidiPort outPort)> outPorts = new ConcurrentDictionary<string, (MidiEndpoint midiEndpoint, MidiPort outPort)>();
         public ObservableRangeCollection<MidiPort> Inputs { get; } = new ObservableRangeCollection<MidiPort>();
         public ObservableRangeCollection<MidiPort> Outputs { get; } = new ObservableRangeCollection<MidiPort>();
+
         public MidiDeviceManager()
         {
             Midi.Restart();
@@ -58,7 +61,7 @@ namespace AuHost
         private void TryConnectInPort(MidiEndpoint midiEndpoint)
         {
             var inPort = client.CreateInputPort(midiEndpoint.Entity.Name);
-            inPort.MessageReceived += OnOutputPortOnMessageReceived;
+            inPort.MessageReceived += OnInputPortOnMessageReceived;
 
             var code = inPort.ConnectSource(midiEndpoint);
             if (code != MidiError.Ok)
@@ -71,14 +74,14 @@ namespace AuHost
             Inputs.Add(inPort);
         }
 
-        private void OnOutputPortOnMessageReceived(object sender, MidiPacketsEventArgs e)
+        private void OnInputPortOnMessageReceived(object sender, MidiPacketsEventArgs e)
         {
             var packetList = e.PacketListRaw;
-            var length1 = Marshal.ReadInt32(packetList);
-            var midiMessages = new MidiMessage[length1];
+            var len = Marshal.ReadInt32(packetList);
+            var midiMessages = new MidiMessage[len];
             packetList += 4;
 
-            for (var index = 0; index < length1; ++index)
+            for (var index = 0; index < len; ++index)
             {
                 var midiMessage = new MidiMessage(packetList);
                 midiMessages[index] = midiMessage;

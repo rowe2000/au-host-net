@@ -34,8 +34,8 @@ namespace AuHost.Commands
 
             Push(new SelectStrip(strip));
 
-            Push(new AddPlugin(strip, InternalPluginFormat.MidiInDesc, 0));
-            Push(new AddPlugin(strip, InternalPluginFormat.AudioOutDesc, strip.Items.Count));
+            // Push(new AddPlugin(strip, InternalPluginFormat.MidiInDesc, 0));
+            // Push(new AddPlugin(strip, InternalPluginFormat.AudioOutDesc, strip.Items.Count));
 
             return base.Execute();
         }
