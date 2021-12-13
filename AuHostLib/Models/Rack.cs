@@ -9,16 +9,16 @@ namespace AuHost.Models
 {
     public class Rack : Slotable<Zone, Frame>, IPresetable
     {
-        private MidiPort selectedMidiPort;
-
         public new Container<Zone> Items => base.Items;
 
         public ICommand AddZoneCmd { get; }
+        public ICommand AddMidiPropCmd { get; }
+
 
         public ObservableCollection<MidiPort> MidiInputs => PluginGraph.Instance.MidiDeviceManager.Inputs;
 
-        public ICommand AddMidiPropCmd { get; }
-
+        
+        private MidiPort selectedMidiPort;
         public MidiPort SelectedMidiPort
         {
             get => selectedMidiPort;

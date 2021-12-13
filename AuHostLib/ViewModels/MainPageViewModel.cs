@@ -26,7 +26,7 @@ namespace AuHost.ViewModels
         public MainPageViewModel()
         {
             PluginGraph = PluginGraph.Instance;
-            AudioComponentModels = PluginGraph.AudioUnitManager.AudioComponentModels;
+            AudioComponentModels = PluginGraph.AudioUnitManager.AudioUnitComponentModels;
             Manufactures = new ObservableRangeCollection<Grouping<string, AudioComponentModel>>(
                 AudioComponentModels
                     .GroupBy(o => o.Manufacture)

@@ -13,11 +13,11 @@ namespace AuHost.Plugins
     public class AudioUnitManager
     {
         private readonly ConcurrentDictionary<AudioComponentDescription, List<AVAudioUnit>> recycleBin = new ConcurrentDictionary<AudioComponentDescription, List<AVAudioUnit>>();
-        private readonly List<AVAudioUnit> pendingAVAudioUnits = new List<AVAudioUnit>();
+        private readonly List<AVAudioUnit> pendingAvAudioUnits = new List<AVAudioUnit>();
 
         private readonly Dictionary<string, AVAudioUnitComponent> components;
 
-        public readonly ObservableRangeCollection<ViewModels.AudioComponentModel> AudioComponentModels;
+        public readonly ObservableRangeCollection<ViewModels.AudioComponentModel> AudioUnitComponentModels;
         
         public AudioUnitManager()
         {
@@ -35,8 +35,8 @@ namespace AuHost.Plugins
                 .GetComponents(anyMusicDevice)
                 .ToDictionary(o => o.Name, o => o);
 
-            var viewAudioComponents = components.Select(o => new ViewModels.AudioComponentModel { AudioUnitComponent = o.Value});
-            AudioComponentModels = new ObservableRangeCollection<ViewModels.AudioComponentModel>(viewAudioComponents);
+            var audioUnitComponentModels = components.Select(o => new ViewModels.AudioComponentModel { AudioUnitComponent = o.Value});
+            AudioUnitComponentModels = new ObservableRangeCollection<ViewModels.AudioComponentModel>(audioUnitComponentModels);
 
             foreach(var g in components.Values.GroupBy(o => o.ManufacturerName))
             {
@@ -83,7 +83,7 @@ namespace AuHost.Plugins
 
             plugin.IsDeleting = true;
             var avAudioUnit = plugin.AVAudioUnit;
-            pendingAVAudioUnits.Add(avAudioUnit);
+            pendingAvAudioUnits.Add(avAudioUnit);
             plugin.ShowWindow(false);
             plugin.Dispose();
             
@@ -99,10 +99,10 @@ namespace AuHost.Plugins
 
         private void EndRecycleNode(AVAudioUnit avAudioUnit)
         {
-            if (!pendingAVAudioUnits.Contains(avAudioUnit)) 
+            if (!pendingAvAudioUnits.Contains(avAudioUnit)) 
                 return;
             
-            pendingAVAudioUnits.Remove(avAudioUnit);
+            pendingAvAudioUnits.Remove(avAudioUnit);
             avAudioUnit.AudioUnit.Stop();
             avAudioUnit.Engine?.DetachNode(avAudioUnit);
 
