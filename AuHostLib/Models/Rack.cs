@@ -9,8 +9,6 @@ namespace AuHost.Models
 {
     public class Rack : Slotable<Zone, Frame>, IPresetable
     {
-        public new Container<Zone> Items => base.Items;
-
         public ICommand AddZoneCmd { get; }
         public ICommand AddMidiPropCmd { get; }
 
@@ -69,13 +67,14 @@ namespace AuHost.Models
             AddMidiPropCmd = new Xamarin.Forms.Command(() => {});
         }
 
-        public void AddNewZone(bool before = false)
+        public void AddNewZone()
         {
-            var zoneIndex = Items.Count;
-            var addZone = new AddZone(this, zoneIndex);
-            PluginGraph.Instance.CommandExecutor.Execute(addZone);
-
-            addZone.NewZone.OnAddNewStrip();
+            PluginGraph
+                .Instance
+                .CommandExecutor
+                .Execute<AddZone>(this, -1)
+                .NewZone
+                .AddNewStrip();
         }
     }
 }

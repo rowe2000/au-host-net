@@ -10,7 +10,7 @@ namespace AuHost.Plugins
         private readonly Document document;
         public static Cache Instance { get; private set; }
 
-        private readonly Dictionary<int, IItem> dict = new Dictionary<int, IItem>();
+        private readonly Dictionary<int, Item> dict = new Dictionary<int, Item>();
         private int maxId;
         public event Action<int> MaxIdChanged;
 
@@ -41,7 +41,7 @@ namespace AuHost.Plugins
             return ++MaxId;
         }
 
-        public T CreateWithId<T>(int id) where T : IItem
+        public T CreateWithId<T>(int id) where T : Item
         {
             var instance = Activator.CreateInstance<T>();
             instance.Id = id;
@@ -49,7 +49,7 @@ namespace AuHost.Plugins
             return instance;
         }
 
-        public T Create<T>(params object[] args) where T : class, IItem
+        public T Create<T>(params object[] args) where T : Item
         {
             var instance = (T)Activator.CreateInstance(typeof(T), args);
             Register(instance);
@@ -61,13 +61,13 @@ namespace AuHost.Plugins
             MaxIdChanged?.Invoke(obj);
         }
 
-        public void Register<T>(T instance) where T : class, IItem 
+        public void Register<T>(T instance) where T : Item 
         {
             if (dict.Values.Contains(instance))
                 return;
 
             var id = GetNextId();
-            Item<T>.SetId(instance, id);
+            Item.SetId(instance, id);
             dict[instance.Id] = instance;
         }
 

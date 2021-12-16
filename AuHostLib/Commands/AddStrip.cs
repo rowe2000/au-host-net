@@ -5,7 +5,7 @@ namespace AuHost.Commands
 {
     public class AddStrip : Command
     {
-        private Strip strip;
+        public Strip NewStrip { get; private set; }
 
         public override bool SaveInScene => true;
         public int RackIndex { get; set; }
@@ -15,7 +15,7 @@ namespace AuHost.Commands
         public int ZoneId { get; set; }
         public StripType StripType { get; set; }
 
-        public AddStrip(Zone zone, int stripIndex, StripType stripType)
+        public AddStrip(Zone zone, StripType stripType, int stripIndex = -1)
         {
             StripId = Cache.Instance.GetNextId();
             ZoneId = zone.Id;
@@ -29,10 +29,11 @@ namespace AuHost.Commands
             if (zone == null)
                 return false;
 
-            strip = Cache.Instance.CreateWithId<Strip>(StripId);
-            zone.Items.Insert(StripIndex, strip);
+            NewStrip = Cache.Instance.CreateWithId<Strip>(StripId);
+            var stripIndex = StripIndex < 0 ? Items.Count : StripIndex;
+            zone.Items.Insert(stripIndex, NewStrip);
 
-            Push(new SelectStrip(strip));
+            Push(new SelectStrip(NewStrip));
 
             // Push(new AddPlugin(strip, InternalPluginFormat.MidiInDesc, 0));
             // Push(new AddPlugin(strip, InternalPluginFormat.AudioOutDesc, strip.Items.Count));
@@ -44,7 +45,7 @@ namespace AuHost.Commands
         {
             PopAll();
 
-            strip.RemoveFromParent();
+            NewStrip.RemoveFromParent();
 
             return base.Undo();
         }

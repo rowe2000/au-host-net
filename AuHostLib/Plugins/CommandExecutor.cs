@@ -26,11 +26,26 @@ namespace AuHost.Plugins
         public List<Command> NonSceneCommands { get; } = new List<Command>();
 
         public CommandStack Commands { get; } = new CommandStack();
-        
-        public void Execute(Command command)
+
+        public TCommand Execute<TCommand>(params object[] args) where TCommand : Command
+        {
+            TCommand instance;
+            try
+            {
+                instance = (TCommand) Activator.CreateInstance(typeof(TCommand), args);
+            }
+            catch (Exception e)
+            {
+                throw new ArgumentException($@"Can't create instance of {typeof(TCommand).Name} because of the arguments: {string.Join(", ", args)}", e);
+            }
+
+            return Execute(instance);
+        }
+
+        public TCommand Execute<TCommand>(TCommand command) where TCommand : Command
         {
             if (command == null) 
-                return;
+                return default;
             
             Commands.Execute(command);
 
@@ -40,6 +55,8 @@ namespace AuHost.Plugins
                 NonSceneCommands.Add(command);
 
             OnChanged();
+
+            return command;
         }
 
         public void Undo()

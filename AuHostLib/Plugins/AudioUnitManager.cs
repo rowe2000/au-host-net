@@ -82,7 +82,7 @@ namespace AuHost.Plugins
                 return;
 
             plugin.IsDeleting = true;
-            var avAudioUnit = plugin.AVAudioUnit;
+            var avAudioUnit = plugin.AvAudioUnit;
             pendingAvAudioUnits.Add(avAudioUnit);
             plugin.ShowWindow(false);
             plugin.Dispose();

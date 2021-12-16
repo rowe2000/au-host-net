@@ -1,5 +1,7 @@
 namespace AuHost.Models
 {
-    public class StripPreset : Preset 
-    {}
+    public class StripPreset : Preset
+    {
+        
+    }
 }

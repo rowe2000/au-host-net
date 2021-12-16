@@ -4,16 +4,24 @@ using System.Runtime.CompilerServices;
 using AuHost.Annotations;
 using AuHost.Plugins;
 using Foundation;
+using IContainer = AuHost.Plugins.IContainer;
 
 namespace AuHost.Models
 {
-    public abstract class Item<TParent> : NSObject, IItem<TParent>, INotifyPropertyChanged 
-        where TParent : class, IParent
+    public abstract class Item : NSObject, INotifyPropertyChanged
     {
         private int id = -1;
         private int index = -1;
         private string name = "";
-        private TParent parent;
+        private IParent parent;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public int Id
         {
@@ -27,7 +35,7 @@ namespace AuHost.Models
                     return;
                 
                 id = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Id));
             }
         }
         
@@ -38,8 +46,9 @@ namespace AuHost.Models
             {
                 if (index == value)
                     return;
+                
                 index = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Index));
             }
         }
 
@@ -50,25 +59,58 @@ namespace AuHost.Models
             {
                 if (name == value)
                     return;
+                
                 name = value;
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Name));
             }
         }
 
-        public TParent Parent
+        public IParent Parent
         {
             get => parent;
-            set
+            protected set
             {
                 if (parent == value)
                     return;
-                parent = value;
-                OnPropertyChanged();
+                
+                parent = value; 
+                OnPropertyChanged(nameof(Parent));
             }
         }
 
-        public T GetNextSibling<T>() where T : class => Parent.Items.GetItem<T>(Index + 1);
-        public T GetPreviousSibling<T>() where T : class => Parent.Items.GetItem<T>(Index - 1);
+        public T GetParent<T>() where T : class, IParent
+        {
+            return Parent as T ?? (Parent as IItem)?.GetParent<T>();
+        }
+
+        public static void SetId(Item instance, int id)
+        {
+            instance.Id = id;
+        }
+    }
+
+    public abstract class Item<TParent> : Item, IItem 
+        where TParent : class, IParent
+    {
+        private IContainer items;
+        public IContainer Items
+        {
+            get => items;
+            protected set
+            {
+                items = value;
+                OnPropertyChanged(nameof(Items));
+            }
+        }
+
+        public new TParent Parent
+        {
+            get => base.Parent as TParent;
+            private set => base.Parent = value;
+        }
+
+        public T GetNextSibling<T>() where T : class => Parent?.Items.GetItem<T>(Index + 1);
+        public T GetPreviousSibling<T>() where T : class => Parent?.Items.GetItem<T>(Index - 1);
         public void MoveTo(int newIndex) => Parent?.Items.Move(this, newIndex);
 
         public bool RemoveFromParent() => Parent?.Items.Remove(this) ?? false;
@@ -76,11 +118,6 @@ namespace AuHost.Models
         {
             get => Parent;
             set => Parent = value as TParent;
-        }
-        
-        public T GetParent<T>() where T : class, IParent
-        {
-            return Parent as T ?? (Parent as IItem)?.GetParent<T>();
         }
 
         public IItem GetPreviousDeep()
@@ -115,24 +152,7 @@ namespace AuHost.Models
             }
 
             return item;
-        }        
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public Plugins.IContainer Items { get; protected set; }
-        
-        public static void SetId(IItem instance, int id)
-        {
-            instance.Id = id;
-        }
-
-
     }
     
     public abstract class Item<TSubItem, TParent> : Item<TParent>
@@ -145,7 +165,6 @@ namespace AuHost.Models
         {
             base.Items = new Container<TSubItem>(this);
             base.Items.CollectionChanged += (o, a) => GetParent<Frame>()?.FixStripNumbers();
-
         }
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Windows.Input;
 using AuHost.Commands;
 using AuHost.Plugins;
@@ -9,12 +10,26 @@ namespace AuHost.Models
     {
         public NoteTransform NoteTransform;
 
-        public new Container<Plugin> Items => base.Items;
         public Strip()
         { 
             AddSynthPluginCmd = new Command(AddNewSynthPlugin);
-            AddMidiPropCmd = new Command(() => { });
-            AddAudioPropCmd = new Command(() => { });
+            AddMidiPropCmd = new Command(PopupMidiProp);
+            AddAudioPropCmd = new Command(PopupAudioProp);
+        }
+
+        public ICommand AddMidiPropCmd { get; }
+        public ICommand AddAudioPropCmd { get; }
+        public ICommand AddSynthPluginCmd { get; }
+
+        public void PopupAudioProp()
+        {
+            // new PopupMenu (this, showPopupMenu);
+            // menu.Inflate (Resource.Menu.popup_menu);
+            // menu.Show ();
+        }
+
+        public void PopupMidiProp()
+        {
         }
 
         private int number;
@@ -24,19 +39,17 @@ namespace AuHost.Models
             set
             {
                 number = value; 
-                OnPropertyChanged();
+                OnPropertyChanged(nameof(Number));
             }
         }
 
-        public ICommand AddMidiPropCmd { get; }
-        public ICommand AddAudioPropCmd { get; }
-        public ICommand AddSynthPluginCmd { get; }
-
         private void AddNewSynthPlugin()
         {
-            var addPlugin = new AddPlugin(this, PluginGraph.Instance.SelectedComponent.Name, Items.Count);
-            addPlugin.Execute();
-            Items.Add(addPlugin.Plugin);
+            var pluginGraph = PluginGraph.Instance;
+            
+            pluginGraph
+                .CommandExecutor
+                .Execute<AddPlugin>(this, pluginGraph.SelectedComponent?.Name, -1);
         }
 
         public Preset GetOrCreatePreset()

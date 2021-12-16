@@ -15,9 +15,4 @@ namespace AuHost.Plugins
 
         IItem GetNextDeep();
     }
-    
-    public interface IItem<TContainer> : IItem
-    {
-        new TContainer Parent { get; set;}
-   } 
 }

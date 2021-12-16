@@ -65,19 +65,19 @@ namespace AuHost.Plugins
         {
             if (srcChannel != 4096 && dstChannel != 4096)
             {
-                AudioEngine?.DisconnectNodeOutput(srcPlugin.AVAudioUnit);
-                AudioEngine?.DisconnectNodeInput(dstPlugin.AVAudioUnit);
+                AudioEngine?.DisconnectNodeOutput(srcPlugin.AvAudioUnit);
+                AudioEngine?.DisconnectNodeInput(dstPlugin.AvAudioUnit);
             }
             else if (srcChannel == 4096 && dstChannel == 4096)
-                AudioEngine?.DisconnectMidi(srcPlugin.AVAudioUnit, dstPlugin.AVAudioUnit);
+                AudioEngine?.DisconnectMidi(srcPlugin.AvAudioUnit, dstPlugin.AvAudioUnit);
         }
 
         public void AddConnection(Plugin srcPlugin, int srcChannel, Plugin dstPlugin, int dstChannel)
         {
             if (srcChannel != 4096 && dstChannel != 4096)
-                AudioEngine?.Connect(srcPlugin.AVAudioUnit, dstPlugin.AVAudioUnit, null);
+                AudioEngine?.Connect(srcPlugin.AvAudioUnit, dstPlugin.AvAudioUnit, null);
             else if (srcChannel == 4096 && dstChannel == 4096)
-                AudioEngine?.ConnectMidi(srcPlugin.AVAudioUnit, dstPlugin.AVAudioUnit, null, null);
+                AudioEngine?.ConnectMidi(srcPlugin.AvAudioUnit, dstPlugin.AvAudioUnit, null, null);
             else
                 throw new Exception("Can't connect Midi to Audio");
         }
@@ -89,7 +89,7 @@ namespace AuHost.Plugins
 
         public void Register(Plugin plugin)
         {
-            plugins[plugin.AVAudioUnit] = plugin;
+            plugins[plugin.AvAudioUnit] = plugin;
         }
 
         public async Task<AVAudioUnit> Fetch(string name, AVAudioUnit avAudioUnit)

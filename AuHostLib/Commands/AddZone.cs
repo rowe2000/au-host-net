@@ -13,7 +13,7 @@ namespace AuHost.Commands
         public int RackId { get; set; }
         public int ZoneId { get; set; }
 
-        public AddZone(Rack rack, int zoneIndex)
+        public AddZone(Rack rack, int zoneIndex = -1)
         {
             RackId = rack.Id;
             ZoneIndex = zoneIndex;
@@ -22,10 +22,10 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var rack = Cache.Instance.GetItem<Rack>(RackId);
             NewZone = Cache.Instance.CreateWithId<Zone>(ZoneId);
-            
-            rack.Items.Insert(ZoneIndex, NewZone);
+            var zoneIndex = ZoneIndex < 0 ? Items.Count : ZoneIndex;
+            var rack = Cache.Instance.GetItem<Rack>(RackId);
+            rack.Items.Insert(zoneIndex, NewZone);
 
             Push(new SelectZone(NewZone));
 

@@ -1,33 +1,52 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using System.Windows.Input;
+using AudioUnit;
 using AuHost.Plugins;
 using AVFoundation;
+using Xamarin.Forms;
 
 namespace AuHost.Models
 {
     public class Plugin : Slotable<IItem, Strip>, IPresetable
     {
-         
-        public AVAudioUnit AVAudioUnit { get; private set; }
+        private bool isShowing;
+
+        public ICommand ToggleGuiCmd { get; }
+
+        public Plugin()
+        {
+            ToggleGuiCmd = new Command(ToggleGui);
+        }
+        
+        public Plugin(string name) : this()
+        {
+            Name = name;
+        }
+
+        private void ToggleGui()
+        {
+            isShowing = !isShowing;
+            ShowWindow(isShowing);
+        }
+
+        public AVAudioUnit AvAudioUnit { get; private set; }
         
         public Preset GetOrCreatePreset()
         {
-            return Preset;
+            var currentPreset = AvAudioUnit.AUAudioUnit.CurrentPreset;
+            var dict = AvAudioUnit.AUAudioUnit.GetPresetState(currentPreset, out var err);
+            return new PluginPreset(currentPreset) ;
         }
 
         public bool IsBypassed { get; set; }
         public bool IsDeleting { get; set; }
 
-        public Plugin(string name)
-        {
-            Name = name;
-        }
-
         public async Task BeginActivate(Strip strip)
         {
-            AVAudioUnit = await PluginGraph.Instance.Fetch(Name, AVAudioUnit);
-            if (AVAudioUnit == null)
+            AvAudioUnit = await PluginGraph.Instance.Fetch(Name, AvAudioUnit);
+            if (AvAudioUnit == null)
             {
                 Console.WriteLine($@"Couldn't create audio unit");
                 return;
@@ -45,8 +64,8 @@ namespace AuHost.Models
         public bool AcceptsMidi() => true;
         public bool ProducesMidi() => true;
 
-        public int GetTotalNumOutputChannels() => (int)AVAudioUnit.NumberOfOutputs;
-        public int GetTotalNumInputChannels() => (int)AVAudioUnit.NumberOfInputs;
+        public int GetTotalNumOutputChannels() => (int)AvAudioUnit.NumberOfOutputs;
+        public int GetTotalNumInputChannels() => (int)AvAudioUnit.NumberOfInputs;
 
         public bool IsWindowShowing()
         {
@@ -67,8 +86,8 @@ namespace AuHost.Models
         {
             foreach (var midiMessage in midiMessages)
             {
-                AVAudioUnit.AudioUnit.MusicDeviceMIDIEvent(midiMessage.StatusByte, midiMessage.Byte1, midiMessage.Byte2 ?? 0);
-                Console.WriteLine($@"{AVAudioUnit.Name}, {midiMessage}");
+                AvAudioUnit.AudioUnit.MusicDeviceMIDIEvent(midiMessage.StatusByte, midiMessage.Byte1, midiMessage.Byte2 ?? 0);
+                Console.WriteLine($@"{AvAudioUnit.Name}, {midiMessage}");
             }
         }
     }

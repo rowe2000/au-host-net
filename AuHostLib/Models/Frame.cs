@@ -14,7 +14,7 @@ namespace AuHost.Models
 
         public Frame()
         {
-            AddNewRackCmd = new Xamarin.Forms.Command(() => AddNewRack());
+            AddNewRackCmd = new Xamarin.Forms.Command(AddNewRack);
             AddMidiPropCmd = new Xamarin.Forms.Command(() => {});
             
             Items = new Container<Rack>(this);
@@ -29,7 +29,7 @@ namespace AuHost.Models
                 strip.Number = number++;
         }
 
-        public void AddNewRack(bool before = false)
+        public void AddNewRack()
         {
             var pluginGraph = PluginGraph.Instance;
             var document = pluginGraph.Document;
@@ -37,9 +37,7 @@ namespace AuHost.Models
             var currentScene = document.CurrentScene;
             document.Launch(document);
 
-            var rackIndex = Items.Count;
-            var addRack = new AddRack(rackIndex);
-            pluginGraph.CommandExecutor.Execute(addRack);
+            var addRack = pluginGraph.CommandExecutor.Execute<AddRack>(-1);
 
             document.Launch(currentScene);
 

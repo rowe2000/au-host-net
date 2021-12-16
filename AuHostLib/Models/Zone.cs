@@ -9,7 +9,7 @@ namespace AuHost.Models
     {
         public Zone()
         {
-            AddStripCmd = new Xamarin.Forms.Command(OnAddNewStrip);
+            AddStripCmd = new Xamarin.Forms.Command(AddNewStrip);
             AddMidiPropCmd = new Xamarin.Forms.Command(() => { });
         }
 
@@ -23,33 +23,33 @@ namespace AuHost.Models
         public ICommand AddStripCmd { get; }
 
         public ICommand AddMidiPropCmd { get; }
-        
 
-        public void OnAddNewStrip()
-        {
-            var addStrip = new AddStrip(this, Items.Count, StripType.Instrument);
-            PluginGraph.Instance.CommandExecutor.Execute(addStrip);
-        }
+
+        public void AddNewStrip() => PluginGraph
+            .Instance
+            .CommandExecutor
+            .Execute<AddStrip>(this, StripType.Instrument, -1);
 
         public void SetSplitNote(int startNote)
         {
             //TODO: Create NoteTransform class
             SplitRange.Start = startNote;
-            foreach(Strip item in Items)
-            	 item.NoteTransform.zoneSplit = SplitRange;
+            foreach(var strip in Items)
+            	 strip.NoteTransform.zoneSplit = SplitRange;
 
             var endNote = startNote - 1;
 
             var previousZone = GetPreviousSibling<Zone>();
             previousZone.SplitRange.End = endNote;
-            foreach(Strip item in previousZone.Items)
-            	item.NoteTransform.zoneSplit = previousZone.SplitRange;
+            foreach(var strip in previousZone.Items)
+            	strip.NoteTransform.zoneSplit = previousZone.SplitRange;
         }
 
         public void OnMidiMessageReceived(MidiMessage[] midiMessages)
         {
             foreach (var item in Items)
             {
+                //TODO: Split notes by zones
                 item.OnMidiMessageReceived(midiMessages);
             }
         }

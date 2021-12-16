@@ -1,3 +1,4 @@
+using System.Windows.Input;
 using AuHost.Models;
 using AuHost.Plugins;
 
@@ -14,7 +15,7 @@ namespace AuHost.Commands
 
         public Plugin Plugin { get; private set; }
 
-        public AddPlugin(Strip strip, string pluginName, int pluginIndex)
+        public AddPlugin(Strip strip, string pluginName, int pluginIndex = -1)
         {
             StripId = strip.Id;
             PluginName = pluginName;
@@ -23,9 +24,12 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
+            if (PluginName == null)
+                return false;
+            
             strip = Cache.Instance.GetItem<Strip>(StripId);
             Plugin = Cache.Instance.Create<Plugin>(PluginName);
-            Plugin.Index = PluginIndex;
+            Plugin.Index = PluginIndex < 0  ? strip.Items.Count : PluginIndex;
             Plugin.Activate(strip);
 
             return base.Execute();
@@ -33,6 +37,9 @@ namespace AuHost.Commands
 
         public override bool Undo()
         {
+            if (Plugin is null)
+                return false;
+            
             strip.Items.Remove(Plugin);
 
             return base.Undo();

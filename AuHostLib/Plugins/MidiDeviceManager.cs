@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using AudioUnit;
@@ -12,14 +11,12 @@ namespace AuHost
     public class MidiDeviceManager
     {
         private readonly byte[] bytes = new byte[150];
-        private int length = 0;
         private AUMidiOutputEventBlock midiOutputEventBlock = null;
         private AUHostTransportStateBlock transportStateBlock = null;
-        
         //private AUHostMusicalContextBlock musicalContextBlock;
         
         private readonly ConcurrentQueue<MidiMessage> packets = new ConcurrentQueue<MidiMessage>();
-        private readonly MidiClient client;
+        private readonly MidiClient midiClient;
 
         private readonly ConcurrentDictionary<string, (MidiEndpoint midiEndpoint, MidiPort inPort)> inPorts = new ConcurrentDictionary<string, (MidiEndpoint midiEndpoint, MidiPort inPort)>();
         private readonly ConcurrentDictionary<string, (MidiEndpoint midiEndpoint, MidiPort outPort)> outPorts = new ConcurrentDictionary<string, (MidiEndpoint midiEndpoint, MidiPort outPort)>();
@@ -29,7 +26,7 @@ namespace AuHost
         public MidiDeviceManager()
         {
             Midi.Restart();
-            client = GetMidiClient();
+            midiClient = GetMidiClient();
             SetupMidi();
         }
         
@@ -44,7 +41,7 @@ namespace AuHost
 
         private void TryConnectOutPort(MidiEndpoint midiEndpoint)
         {
-            var outPort = client.CreateOutputPort(midiEndpoint.Entity.Name);
+            var outPort = midiClient.CreateOutputPort(midiEndpoint.Entity.Name);
             //outPort.MessageReceived += OnOutputPortOnMessageReceived;
 
             var code = outPort.ConnectSource(midiEndpoint);
@@ -60,7 +57,7 @@ namespace AuHost
 
         private void TryConnectInPort(MidiEndpoint midiEndpoint)
         {
-            var inPort = client.CreateInputPort(midiEndpoint.Entity.Name);
+            var inPort = midiClient.CreateInputPort(midiEndpoint.Entity.Name);
             inPort.MessageReceived += OnInputPortOnMessageReceived;
 
             var code = inPort.ConnectSource(midiEndpoint);
@@ -166,22 +163,21 @@ namespace AuHost
 
         private AudioUnitStatus InternalRenderBlockProc()
         {
+            var len = 0;
             unsafe
             {
-                length = 0;
                 while (!packets.IsEmpty)
                 {
                     packets.TryDequeue(out var packet);
-                    Array.Copy(packet.Bytes, 0, bytes, length, packet.Bytes.Length);
+                    Array.Copy(packet.Bytes, 0, bytes, len, packet.Bytes.Length);
 
-                    length += packet.Bytes.Length;
+                    len += packet.Bytes.Length;
                 }
 
                 fixed (byte* ptr = &bytes[0])
-                    midiOutputEventBlock(1, 0, length, (IntPtr)ptr);
+                    midiOutputEventBlock(1, 0, len, (IntPtr)ptr);
 
                 return AudioUnitStatus.NoError;
-
             }
         }
     }

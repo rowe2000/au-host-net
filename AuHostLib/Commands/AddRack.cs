@@ -10,7 +10,7 @@ namespace AuHost.Commands
         public int RackId { get; set; }
         public Rack NewRack { get; private set; }
 
-        public AddRack(int rackIndex)
+        public AddRack(int rackIndex = -1)
         {
             RackIndex = rackIndex;
             RackId = Cache.Instance.GetNextId();
@@ -18,10 +18,10 @@ namespace AuHost.Commands
 
         public override bool Execute()
         {
-            var pluginGraph = PluginGraph.Instance;
-            
             NewRack = Cache.Instance.CreateWithId<Rack>(RackId);
-            pluginGraph.Frame.Items.Insert(RackIndex, NewRack);
+            var frame = PluginGraph.Instance.Frame;
+            var rackIndex = RackIndex < 0 ? frame.Items.Count : RackIndex;
+            frame.Items.Insert(rackIndex, NewRack);
 
             Push(new SelectRack(NewRack));
 

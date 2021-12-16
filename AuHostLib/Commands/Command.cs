@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using AuHost.Models;
-using AuHost.Plugins;
 
 namespace AuHost.Commands
 {
@@ -44,6 +43,8 @@ namespace AuHost.Commands
             }
         }
     
+
+        
         protected virtual bool Push(Command command)
         {
             if (!command.Execute()) 

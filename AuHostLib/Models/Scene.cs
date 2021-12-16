@@ -8,11 +8,12 @@ namespace AuHost.Models
     public class Scene : Storable<Scene, Scene>
     {
         public List<Command> Commands { get; } = new List<Command>();
-        
+
         public int Bar { get; set; }
         public string Beat { get; set; }
         public float Tempo { get; set; }
         public string  Key { get; set; }
+        
         public int Transpose { get; set; }
 
         public List<Scene> GetPath() => Items.GetPath<Scene>();

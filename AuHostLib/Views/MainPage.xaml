@@ -9,22 +9,23 @@
         <viewModels:MainPageViewModel />
     </ContentPage.BindingContext>
 
-    <StackLayout Orientation="Vertical">
+    
+    <StackLayout Orientation="Vertical" VerticalOptions="Fill" HorizontalOptions="Fill" BackgroundColor="#FF000000" Margin="0" Padding="0">
     
         <!-- SceneBar -->
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal" HeightRequest="50" HorizontalOptions="Fill" Margin="0" Padding="0">
             <Label Text="SceneBar" />
         </StackLayout>        
         
         <!-- Workspace -->
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal" HorizontalOptions="Fill" BackgroundColor="Black" Margin="0" Padding="0">
         
             <!-- AudioUnits -->
-            <ListView HorizontalOptions="Start" WidthRequest="300"  
-                BackgroundColor="Transparent"
-                ItemsSource="{Binding AudioComponentModels}"
-                SelectedItem="{Binding PluginGraph.SelectedComponent}"
-                SelectionMode="Single">
+            <ListView HorizontalOptions="Start" WidthRequest="300" 
+                      ItemsSource="{Binding AudioComponentModels}"
+                      SelectedItem="{Binding PluginGraph.SelectedComponent}"
+                      SelectionMode="Single"
+                      Margin="0">
 
                 <ListView.Header>
                     <StackLayout>
@@ -47,94 +48,128 @@
                 
             </ListView>
 
-            <StackLayout Orientation="Vertical">
+            <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand" Margin="0" Padding="0">
                 <!-- Controls -->
-                <StackLayout>
+                <StackLayout Margin="0" Padding="0">
                 </StackLayout>
                 
                 <!-- Frame -->
-                <ScrollView Orientation="Vertical">
-                    <StackLayout Orientation="Vertical">
+                <ScrollView Orientation="Vertical" HorizontalOptions="Fill" Margin="0" Padding="3">
+                    <StackLayout Orientation="Vertical" HorizontalOptions="Fill" Margin="0" Padding="0">
                         
                         <!-- Racks -->
-                        <StackLayout Orientation="Vertical" BindableLayout.ItemsSource="{Binding PluginGraph.Frame.Items}">
+                        <StackLayout Orientation="Vertical" HorizontalOptions="Fill"  Margin="0" Padding="0" BindableLayout.ItemsSource="{Binding PluginGraph.Frame.Items}" >
                             <BindableLayout.ItemTemplate>
                                 <DataTemplate x:DataType="models:Rack">
                                     
                                     <!-- Rack -->
-                                    <StackLayout Orientation="Vertical">
+                                    <Frame HorizontalOptions="Fill" CornerRadius="40" 
+                                           Margin="3"
+                                           Padding="3"
+                                           BackgroundColor="#15FFFFFF">
+                                        <StackLayout
+                                            Orientation="Vertical"
+                                            HorizontalOptions="Fill"
+                                            Margin="0" Padding="0">
 
-                                        <!-- Rack tools -->
-                                        <StackLayout Orientation="Horizontal">
-                                            
-                                            <Label Text="RACK" /><Label Text="{Binding Index}" />
-                                            <Picker 
-                                                ItemsSource="{Binding MidiInputs}" 
-                                                SelectedItem="{Binding SelectedMidiPort}" 
-                                                ItemDisplayBinding="{Binding .PortName}" />
+                                            <!-- Rack tools -->
+                                            <StackLayout Orientation="Horizontal" HorizontalOptions="Fill"  Margin="3" Padding="0">
 
-                                            <!-- Rack midi props -->
-                                            <StackLayout Orientation="Horizontal"></StackLayout>    
-                                            <Button Text="Add MIDI" Command="{Binding AddMidiPropCmd}" />
-                                            <Button Text="Add ZONE" Command="{Binding AddZoneCmd}" />
-                                            
-                                        </StackLayout>
+                                                <Label Text="RACK" /><Label Text="{Binding Index}" />
+                                                <Picker
+                                                    ItemsSource="{Binding MidiInputs}"
+                                                    SelectedItem="{Binding SelectedMidiPort}"
+                                                    ItemDisplayBinding="{Binding .PortName}" />
 
-                                        <!-- Zones -->
-                                        <StackLayout Orientation="Vertical" BindableLayout.ItemsSource="{Binding Items}">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate x:DataType="models:Zone">
-                            
-                                                    <!-- Zone -->
-                                                    <StackLayout Orientation="Horizontal">
-                                                        
-                                                        <!-- Zone tools -->
-                                                        <StackLayout>
-                                                            <!-- Zone midi props -->
-                                                            <StackLayout Orientation="Horizontal"></StackLayout>    
-                                                            <Button Text="Add MIDI" Command="{Binding AddMidiPropCmd}"/>
-                                                            <Button Text="Add STRIP" Command="{Binding AddStripCmd}"/>
-                                                        </StackLayout>
-                                                        
-                                                        <!-- Strips -->
-                                                        <StackLayout Orientation="Vertical" BindableLayout.ItemsSource="{Binding Items}">
-                                                            <BindableLayout.ItemTemplate>
-                                                                <DataTemplate x:DataType="models:Strip">
-                                                                    
-                                                                    <!-- Strip -->
-                                                                    <StackLayout Orientation="Horizontal">
-                                                                        <Button Text="{Binding Number}" ></Button>
-                                                                        
-                                                                        <!-- Strip midi props -->
-                                                                        <StackLayout Orientation="Horizontal"></StackLayout>    
-                                                                        <Button Text="Add MIDI" Command="{Binding AddMidiPropCmd}"/>
-                                                                        
-                                                                        <!-- Plugins -->
-                                                                        <StackLayout Orientation="Horizontal" BindableLayout.ItemsSource="{Binding Items}">
-                                                                            <BindableLayout.ItemTemplate>
-                                                                                <DataTemplate x:DataType="models:Plugin">
-                                                                                    <Button Text="{Binding Name}"></Button>
-                                                                                </DataTemplate>
-                                                                            </BindableLayout.ItemTemplate>
-                                                                        </StackLayout>    
-                                                                        <Button Text="Add SYNTH" Command="{Binding AddSynthPluginCmd}"/>
+                                                <!-- Rack midi props -->
+                                                <StackLayout Orientation="Horizontal"  Margin="0" Padding="0"></StackLayout>
+                                                <Button Text="Add MIDI" Command="{Binding AddMidiPropCmd}" />
+                                                <Button Text="Add ZONE" Command="{Binding AddZoneCmd}" />
 
-                                                                        <!-- Strip audio props -->
-                                                                        <Button Text="Add AUDIO" Command="{Binding AddAudioPropCmd}"/>
-                                                                        <StackLayout Orientation="Horizontal"></StackLayout>    
-                                                                        
-                                                                    </StackLayout>
-                                                                    
-                                                                </DataTemplate>
-                                                            </BindableLayout.ItemTemplate>
-                                                        </StackLayout>
-                                                        
-                                                    </StackLayout>                  
-                                                        
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </StackLayout>
-                                    </StackLayout>
+                                            </StackLayout>
+
+                                            <!-- Zones -->
+                                            <StackLayout Orientation="Vertical"
+                                                         BindableLayout.ItemsSource="{Binding Items}"
+                                                         HorizontalOptions="Fill"
+                                                         Margin="0" Padding="0">
+                                                <BindableLayout.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:Zone">
+
+                                                        <!-- Zone -->
+                                                        <Frame CornerRadius="34" BackgroundColor="#15FFFFFF"  Margin="3" Padding="0">
+                                                            <StackLayout Orientation="Horizontal"
+                                                                         HorizontalOptions="FillAndExpand"
+                                                                         Margin="0" Padding="0">
+
+                                                                <!-- Zone tools -->
+                                                                <StackLayout>
+                                                                    <!-- Zone midi props -->
+                                                                    <StackLayout Orientation="Horizontal"  Margin="0" Padding="0"></StackLayout>
+                                                                    <Button Text="Add MIDI"
+                                                                            Command="{Binding AddMidiPropCmd}" />
+                                                                    <Button Text="Add STRIP"
+                                                                            Command="{Binding AddStripCmd}" />
+                                                                </StackLayout>
+
+                                                                <!-- Strips -->
+                                                                <StackLayout Orientation="Vertical" HorizontalOptions="FillAndExpand"
+                                                                             Margin="0" Padding="1"
+                                                                             BindableLayout.ItemsSource="{Binding Items}">
+                                                                    <BindableLayout.ItemTemplate>
+                                                                        <DataTemplate x:DataType="models:Strip">
+
+                                                                            <!-- Strip -->
+                                                                            <Frame HeightRequest="56" CornerRadius="28" BackgroundColor="#15FFFFFF" HorizontalOptions="Fill"  Margin="1" Padding="1">
+                                                                                <StackLayout Orientation="Horizontal" HorizontalOptions="Fill">
+                                                                                    <Button Text="{Binding Number}"></Button>
+
+                                                                                    <!-- Strip midi props -->
+                                                                                    <StackLayout
+                                                                                        Margin="0" Padding="0"
+                                                                                        Orientation="Horizontal">
+                                                                                    </StackLayout>
+                                                                                    <Button Text="Add MIDI"
+                                                                                        Command="{Binding AddMidiPropCmd}" />
+
+                                                                                    <!-- Plugins -->
+                                                                                    <StackLayout
+                                                                                        Orientation="Horizontal"
+                                                                                        Margin="0" Padding="0"
+                                                                                        BindableLayout.ItemsSource="{Binding Items}">
+                                                                                        <BindableLayout.ItemTemplate>
+                                                                                            <DataTemplate
+                                                                                                x:DataType="models:Plugin">
+                                                                                                <Button
+                                                                                                    Margin="0" Padding="0"
+                                                                                                    Text="{Binding Name}"
+                                                                                                    Command="{Binding ToggleGuiCmd}">
+                                                                                                </Button>
+                                                                                            </DataTemplate>
+                                                                                        </BindableLayout.ItemTemplate>
+                                                                                    </StackLayout>
+                                                                                    <Button Text="Add SYNTH"
+                                                                                        Command="{Binding AddSynthPluginCmd}" />
+
+                                                                                    <!-- Strip audio props -->
+                                                                                    <Button Text="Add AUDIO"
+                                                                                        Command="{Binding AddAudioPropCmd}" />
+                                                                                    <StackLayout
+                                                                                        Orientation="Horizontal">
+                                                                                    </StackLayout>
+
+                                                                                </StackLayout></Frame >
+
+                                                                        </DataTemplate>
+                                                                    </BindableLayout.ItemTemplate>
+                                                                </StackLayout>
+
+                                                            </StackLayout></Frame>
+
+                                                    </DataTemplate>
+                                                </BindableLayout.ItemTemplate>
+                                            </StackLayout>
+                                        </StackLayout></Frame>
                                     
                                 </DataTemplate>
                             </BindableLayout.ItemTemplate>
@@ -154,8 +189,11 @@
         </StackLayout>
         
         <!-- ToolBar -->
-        <StackLayout Orientation="Horizontal">
+        <StackLayout Orientation="Horizontal" HeightRequest="50" HorizontalOptions="Fill">
             <Label Text="ToolBar" />
+            <Grid BindableLayout.ItemsSource="{Binding .ToolBar}">
+                
+            </Grid>
         </StackLayout>        
         
     </StackLayout>
