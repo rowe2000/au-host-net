@@ -41,7 +41,11 @@ namespace AuHost
 
         private void TryConnectOutPort(MidiEndpoint midiEndpoint)
         {
-            var outPort = midiClient.CreateOutputPort(midiEndpoint.Entity.Name);
+            var entityName = midiEndpoint.Entity?.Name;
+            if (entityName == null)
+                return;
+            
+            var outPort = midiClient.CreateOutputPort(entityName);
             //outPort.MessageReceived += OnOutputPortOnMessageReceived;
 
             var code = outPort.ConnectSource(midiEndpoint);
@@ -57,7 +61,11 @@ namespace AuHost
 
         private void TryConnectInPort(MidiEndpoint midiEndpoint)
         {
-            var inPort = midiClient.CreateInputPort(midiEndpoint.Entity.Name);
+            var entityName = midiEndpoint.Entity?.Name;
+            if (entityName == null)
+                return;
+            
+            var inPort = midiClient.CreateInputPort(entityName);
             inPort.MessageReceived += OnInputPortOnMessageReceived;
 
             var code = inPort.ConnectSource(midiEndpoint);
